@@ -4,8 +4,6 @@ plugins {
     id 'kotlin-noarg'
 }
 
-//apply from: 'nexus_upload.gradle'
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
