@@ -1,0 +1,148 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-noarg'
+}
+
+//apply from: 'nexus_upload.gradle'
+
+def getProperty(String filename, String propName) {
+    def propsFile = rootProject.file(filename)
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        if (props[propName] != null) {
+            return props[propName]
+        }
+    }
+    return ""
+}
+
+
+android {
+//    compileSdk 30
+//
+//    defaultConfig {
+//        minSdk 25
+//        targetSdk 30
+//        versionCode 1
+//        versionName "1.0"
+//
+//        buildConfigField("String", "BUGLY_ID", "\"${getProperty("gradle.properties", "BUGLY_ID")}\"")
+//
+//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//        consumerProguardFiles "consumer-rules.pro"
+//
+//        ndk {
+//            abiFilters "armeabi-v7a", "x86"
+//        }
+//    }
+
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        minSdkVersion 25
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField("String", "BUGLY_ID", "\"${getProperty("gradle.properties", "BUGLY_ID")}\"")
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+noArg {
+    annotation("com.zhushenwudi.base.mvvm.util.NoArg")
+}
+
+dependencies {
+    // 基础 UI
+    api 'androidx.appcompat:appcompat:1.3.1'
+    api 'androidx.constraintlayout:constraintlayout:2.1.0'
+    api "androidx.recyclerview:recyclerview:1.2.1"
+    // kotlin
+    api 'androidx.core:core-ktx:1.6.0'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1"
+    // lifecycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    api 'androidx.lifecycle:lifecycle-common-java8:2.3.1'
+    api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    // viewModel
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    api "androidx.fragment:fragment-ktx:1.3.6"
+    // liveData
+    api "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    api 'com.kunminx.arch:unpeek-livedata:7.2.0-beta1'
+    // 路由
+    api 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    api 'androidx.navigation:navigation-ui-ktx:2.3.5'
+
+    /** third party **/
+    // 网络请求
+    api "com.squareup.retrofit2:retrofit:2.9.0"
+    api "com.squareup.retrofit2:converter-gson:2.9.0"
+    api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    // 动态替换BaseUrl库 使用可参考 https://github.com/JessYanCoding/RetrofitUrlManager
+    api 'me.jessyan:retrofit-url-manager:1.4.0'
+    // recycler adapter
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.6'
+    // lottie 动画
+    api 'com.airbnb.android:lottie:3.5.0'
+    // gson
+    api 'com.google.code.gson:gson:2.8.7'
+    // android 工具类
+    api "io.github.afkt:DevAppX:2.2.8"
+    // 权限请求
+    api 'com.ftd.livepermissions:livepermissions:1.0.2'
+    // 下载（断点续传、多线程下载合并）
+    api 'me.laoyuyu.aria:core:3.8.16'
+    // 今日头条屏幕适配
+    api 'me.jessyan:autosize:1.2.1'
+    // data class 深拷贝
+    api 'com.bennyhuo.kotlin.apt:deepcopy-compiler:1.5.0'
+    api 'com.bennyhuo.kotlin.apt:deepcopy-runtime:1.5.0'
+    api 'com.bennyhuo.kotlin.apt:deepcopy-annotations:1.5.0'
+    // 图片
+    api 'io.coil-kt:coil:1.3.2'
+    api 'io.coil-kt:coil-gif:1.3.2'
+    api 'io.coil-kt:coil-svg:1.3.2'
+    api 'io.coil-kt:coil-video:1.3.2'
+    // 腾讯 键值对 存储
+    api 'com.tencent:mmkv-static:1.2.10'
+    // 高仿IOS switch button
+    api "com.github.zcweng:switch-button:0.0.3@aar"
+    // 自动安装 apk
+    api 'com.github.a-voyager:AutoInstaller:v1.0'
+    // 上拉加载、下拉刷新
+    api 'com.scwang.smart:refresh-layout-kernel:2.0.3'
+    api 'com.scwang.smart:refresh-header-material:2.0.3'
+    api 'com.scwang.smart:refresh-footer-ball:2.0.1'
+    // bugly + 崩溃捕获
+    api 'com.tencent.bugly:crashreport_upgrade:1.4.5'
+    api 'com.tencent.bugly:nativecrashreport:3.8.0'
+    // 内存泄露监测
+    debugApi 'com.squareup.leakcanary:leakcanary-android:2.7'
+    api 'com.github.zhushenwudi:openssl:1.0'
+    // com.ilab.login
+    api 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'com.github.jitpack:android-example:1.0.1'
+}
