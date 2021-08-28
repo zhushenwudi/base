@@ -1,6 +1,6 @@
 package com.zhushenwudi.base.login;
 
-import com.zhushenwudi.base.login.org.apache.commons.codec.binary.Base64;
+import com.zhushenwudi.base.login.codec.binary.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

@@ -17,6 +17,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
     }
 
     buildTypes {
@@ -103,8 +107,8 @@ dependencies {
     api 'com.scwang.smart:refresh-layout-kernel:2.0.3'
     api 'com.scwang.smart:refresh-header-material:2.0.3'
     api 'com.scwang.smart:refresh-footer-ball:2.0.1'
-    // bugly + 崩溃捕获
-    api 'com.tencent.bugly:crashreport_upgrade:1.4.5'
+    // bugly 异常上报
+    api 'com.tencent.bugly:crashreport:3.3.9'
     api 'com.tencent.bugly:nativecrashreport:3.8.0'
     // 内存泄露监测
     debugApi 'com.squareup.leakcanary:leakcanary-android:2.7'

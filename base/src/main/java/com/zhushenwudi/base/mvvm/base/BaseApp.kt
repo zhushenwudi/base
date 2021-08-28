@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
@@ -59,7 +60,16 @@ open class BaseApp : Application(), ViewModelStoreOwner {
             }
         })
 
-        Bugly.init(this, getAppMetaData(this), false, strategy)
+        // 是否是上报模式
+        val onlineMode = getAppMetaData<Boolean>(this, "online_mode")
+        val buglyId = getAppMetaData<String>(this, "bugly_id")
+
+        CrashReport.initCrashReport(
+            this,
+            if (onlineMode) buglyId else "",
+            isApkInDebug(this),
+            strategy
+        )
     }
 
     /**
@@ -76,23 +86,37 @@ open class BaseApp : Application(), ViewModelStoreOwner {
         return mFactory as ViewModelProvider.Factory
     }
 
-    private fun getAppMetaData(
+    private inline fun <reified T> getAppMetaData(
         context: Context,
-        metaName: String = "bugly_id"
-    ): String {
+        metaName: String
+    ): T {
         val appInfo = context.packageManager.getApplicationInfo(
             context.packageName,
             PackageManager.GET_META_DATA
         )
 
-        appInfo.metaData?.run {
-            for (key in appInfo.metaData.keySet()) {
-                if (metaName == key) {
-                    return appInfo.metaData[key].toString()
+        when (T::class.java) {
+            java.lang.Boolean::class.java -> {
+                appInfo.metaData?.run {
+                    for (key in appInfo.metaData.keySet()) {
+                        if (metaName == key) {
+                            return appInfo.metaData[key].toString().toBoolean() as T
+                        }
+                    }
                 }
+                return false as T
+            }
+            else -> {
+                appInfo.metaData?.run {
+                    for (key in appInfo.metaData.keySet()) {
+                        if (metaName == key) {
+                            return appInfo.metaData[key].toString() as T
+                        }
+                    }
+                }
+                return "" as T
             }
         }
-        return ""
     }
 
     companion object {
