@@ -20,24 +20,6 @@ def getProperty(String filename, String propName) {
 
 
 android {
-//    compileSdk 30
-//
-//    defaultConfig {
-//        minSdk 25
-//        targetSdk 30
-//        versionCode 1
-//        versionName "1.0"
-//
-//        buildConfigField("String", "BUGLY_ID", "\"${getProperty("gradle.properties", "BUGLY_ID")}\"")
-//
-//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles "consumer-rules.pro"
-//
-//        ndk {
-//            abiFilters "armeabi-v7a", "x86"
-//        }
-//    }
-
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -60,12 +42,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
