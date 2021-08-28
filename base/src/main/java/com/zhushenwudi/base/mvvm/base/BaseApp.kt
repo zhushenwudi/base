@@ -3,13 +3,13 @@ package com.zhushenwudi.base.mvvm.base
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import com.alley.openssl.OpensslUtil
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
-import com.zhushenwudi.base.BuildConfig
 import com.zhushenwudi.base.mvvm.util.SpUtils
 import com.zhushenwudi.base.mvvm.util.getDeviceSN
 import com.zhushenwudi.base.mvvm.util.isApkInDebug
@@ -58,7 +58,8 @@ open class BaseApp : Application(), ViewModelStoreOwner {
                 return null
             }
         })
-        Bugly.init(this, BuildConfig.BUGLY_ID, false, strategy)
+
+        Bugly.init(this, getAppMetaData(this), false, strategy)
     }
 
     /**
@@ -73,6 +74,25 @@ open class BaseApp : Application(), ViewModelStoreOwner {
             mFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(this)
         }
         return mFactory as ViewModelProvider.Factory
+    }
+
+    private fun getAppMetaData(
+        context: Context,
+        metaName: String = "bugly_id"
+    ): String {
+        val appInfo = context.packageManager.getApplicationInfo(
+            context.packageName,
+            PackageManager.GET_META_DATA
+        )
+
+        appInfo.metaData?.run {
+            for (key in appInfo.metaData.keySet()) {
+                if (metaName == key) {
+                    return appInfo.metaData[key].toString()
+                }
+            }
+        }
+        return ""
     }
 
     companion object {

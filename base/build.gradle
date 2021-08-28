@@ -6,20 +6,6 @@ plugins {
 
 //apply from: 'nexus_upload.gradle'
 
-def getProperty(String filename, String propName) {
-    def propsFile = rootProject.file(filename)
-    if (propsFile.exists()) {
-        def props = new Properties()
-        props.load(new FileInputStream(propsFile))
-        if (props[propName] != null) {
-            println("buglyId: ${props[propName]}")
-            return props[propName]
-        }
-    }
-    return ""
-}
-
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -29,8 +15,6 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
-        buildConfigField("String", "BUGLY_ID", "\"${getProperty("${project.rootDir}/gradle.properties", "BUGLY_ID")}\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
