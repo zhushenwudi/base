@@ -1,7 +1,9 @@
 package com.zhushenwudi.base.mvvm.util
 
 import android.content.Context
+import com.getkeepsafe.relinker.ReLinker
 import com.tencent.mmkv.MMKV
+import com.tencent.mmkv.MMKVLogLevel
 
 /**
  * MMKV使用封装
@@ -14,7 +16,13 @@ object SpUtils {
     /**
      * 初始化
      */
-    fun initMMKV(context: Context): String? = MMKV.initialize(context)
+    fun initMMKV(context: Context) {
+        MMKV.initialize(
+            context,
+            { libName -> ReLinker.loadLibrary(context, libName) },
+            MMKVLogLevel.LevelInfo
+        )
+    }
 
     /**
      * 保存数据（简化）
