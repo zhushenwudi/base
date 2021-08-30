@@ -39,7 +39,7 @@ android {
 }
 
 noArg {
-    annotation("com.zhushenwudi.base.mvvm.util.NoArg")
+    annotation("com.zhushenwudi.base.utils.NoArg")
 }
 
 dependencies {

@@ -3,7 +3,7 @@
     package="com.zhushenwudi.base">
     <application>
         <provider
-            android:name=".mvvm.base.Ktx"
+            android:name=".app.Ktx"
             android:authorities="${applicationId}.KtxInstaller"
             android:exported="false" />
     </application>
