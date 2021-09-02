@@ -19,9 +19,6 @@ import java.util.regex.Pattern
 import kotlin.system.exitProcess
 import android.content.pm.ApplicationInfo
 
-
-
-
 private var mLastClick: Long = 0
 private const val TIMER = 3
 private var quickCounts = LongArray(15)
