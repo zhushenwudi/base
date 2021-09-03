@@ -53,10 +53,8 @@ fun countDownTimer(
         }
     }
         .flowOn(Dispatchers.Default)
-        .onCompletion { cause ->
-            if (cause == null) {
-                onFinish.invoke()
-            }
+        .onCompletion {
+            onFinish.invoke()
         }
         .onEach { onTick.invoke(it) }
         .flowOn(Dispatchers.Main)
