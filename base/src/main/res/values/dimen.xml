@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="snackbar_min_width">-1px</dimen>
+    <dimen name="snackbar_max_width">-1px</dimen>
+    <dimen name="snackbar_elevation">2dp</dimen>
+    <dimen name="snackbar_background_corner_radius">0dp</dimen>
+
+    <dimen name="snackbar_padding_horizontal">12dp</dimen>
+    <dimen name="snackbar_padding_vertical">14dp</dimen>
+    <dimen name="snackbar_padding_vertical_2lines">24dp</dimen>
+
+    <dimen name="snackbar_extra_spacing_horizontal">0dp</dimen>
+    <dimen name="snackbar_action_inline_max_width">128dp</dimen>
+</resources>
