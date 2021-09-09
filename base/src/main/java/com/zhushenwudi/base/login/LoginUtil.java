@@ -1,14 +1,16 @@
 package com.zhushenwudi.base.login;
 
 import com.zhushenwudi.base.login.codec.binary.Base64;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class LoginUtil {
     public static String getEnCodePwd(String key, String password) throws Exception {
         return Aes.aesEncrypt(password, getSecret(key));
-//        return BtoAAtoB.btoa(encodeURIComponent(Aes.aesEncrypt(password, getSecret(key))));
+    }
+
+    public static String getBToAEnCodePwd(String key, String password) throws Exception {
+        return BtoAAtoB.btoa(encodeURIComponent(Aes.aesEncrypt(password, getSecret(key))));
     }
 
     private static String encodeURIComponent(String s) {
