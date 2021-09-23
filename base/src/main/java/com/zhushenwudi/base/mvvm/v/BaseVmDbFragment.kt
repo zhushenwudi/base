@@ -17,14 +17,15 @@ import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 abstract class BaseVmDbFragment<VM : BaseAppViewModel, DB : ViewDataBinding> : BaseVmFragment<VM>() {
 
     //该类绑定的ViewDataBinding
-    lateinit var bind: DB
+    private var _binding: DB? = null
+    private val bind get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        bind = DataBindingUtil.inflate(inflater, layoutId(), container, false)
+        _binding = DataBindingUtil.inflate(inflater, layoutId(), container, false)
         bind.lifecycleOwner = this
         return bind.root
     }
@@ -32,5 +33,6 @@ abstract class BaseVmDbFragment<VM : BaseAppViewModel, DB : ViewDataBinding> : B
     override fun onDestroyView() {
         super.onDestroyView()
         bind.unbind()
+        _binding = null
     }
 }
