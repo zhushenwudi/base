@@ -3,16 +3,15 @@ package com.zhushenwudi.base.app
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import com.alley.openssl.OpensslUtil
 import com.tencent.bugly.crashreport.CrashReport
-import com.zhushenwudi.base.utils.SpUtils
-import com.zhushenwudi.base.utils.getDeviceSN
-import com.zhushenwudi.base.utils.isApkInDebug
-import com.zhushenwudi.base.utils.restartApplication
+import com.zhushenwudi.base.mvvm.v.ErrorActivity
+import com.zhushenwudi.base.utils.*
 
 /**
  * 作者　: hegaojian
@@ -23,7 +22,7 @@ import com.zhushenwudi.base.utils.restartApplication
  * GetViewModelExt类的getAppViewModel方法
  */
 
-open class BaseApp : Application(), ViewModelStoreOwner {
+open class BaseApp(private val isDebug: Boolean) : Application(), ViewModelStoreOwner {
 
     private lateinit var mAppViewModelStore: ViewModelStore
 
@@ -51,8 +50,22 @@ open class BaseApp : Application(), ViewModelStoreOwner {
                 errorMessage: String,
                 errorStack: String
             ): Map<String, String>? {
-                if (!isApkInDebug(this@BaseApp)) {
-                    restartApplication()
+                if (crashType < 2) {
+                    try {
+                        val intent = Intent(this@BaseApp, ErrorActivity::class.java)
+                        intent.putExtra(ErrorActivity.ERROR_TYPE, errorType)
+                        intent.putExtra(ErrorActivity.ERROR_MESSAGE, errorMessage)
+                        intent.putExtra(ErrorActivity.ERROR_STACK, errorStack)
+                        intent.putExtra(ErrorActivity.IS_DEBUG, isDebug)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    if (!isDebug) {
+                        restartApplication()
+                    }
                 }
                 return null
             }
@@ -65,7 +78,7 @@ open class BaseApp : Application(), ViewModelStoreOwner {
         CrashReport.initCrashReport(
             this,
             if (onlineMode) buglyId else "",
-            isApkInDebug(this),
+            isDebug,
             strategy
         )
     }

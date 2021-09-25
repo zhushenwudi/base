@@ -179,14 +179,3 @@ fun quickExit() {
         exitProcess(0)
     }
 }
-
-// 判断当前安装的 apk 是否是 debug 版本
-fun isApkInDebug(context: Context): Boolean {
-    return try {
-        val info = context.applicationInfo
-        info.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-    } catch (e: Exception) {
-        e.printStackTrace()
-        false
-    }
-}
