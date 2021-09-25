@@ -22,7 +22,7 @@ import com.zhushenwudi.base.utils.*
  * GetViewModelExt类的getAppViewModel方法
  */
 
-open class BaseApp(private val isDebug: Boolean) : Application(), ViewModelStoreOwner {
+open class BaseApp(private val isDebug: Boolean, private val mailVerify: String) : Application(), ViewModelStoreOwner {
 
     private lateinit var mAppViewModelStore: ViewModelStore
 
@@ -57,6 +57,7 @@ open class BaseApp(private val isDebug: Boolean) : Application(), ViewModelStore
                         intent.putExtra(ErrorActivity.ERROR_MESSAGE, errorMessage)
                         intent.putExtra(ErrorActivity.ERROR_STACK, errorStack)
                         intent.putExtra(ErrorActivity.IS_DEBUG, isDebug)
+                        intent.putExtra(ErrorActivity.MAIL_VERIFY, mailVerify)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
                     } catch (e: Exception) {
