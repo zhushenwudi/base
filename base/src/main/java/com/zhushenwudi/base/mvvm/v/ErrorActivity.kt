@@ -8,14 +8,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.zhushenwudi.base.R
-import com.teprinciple.mailsender.Mail
-import com.teprinciple.mailsender.MailSender
+import com.zhushenwudi.base.mvvm.m.Bridge
+import com.zhushenwudi.base.utils.SendUtil.sendDingTalk
+import com.zhushenwudi.base.utils.SendUtil.sendMail
 import com.zhushenwudi.base.utils.restartApplication
-import dev.utils.app.AppUtils
 import java.util.*
 
 class ErrorActivity: AppCompatActivity() {
-    private val mailArr = arrayListOf(TO_MAIL)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crash)
@@ -31,47 +30,39 @@ class ErrorActivity: AppCompatActivity() {
             val errorType = getStringExtra(ERROR_TYPE)
             val errorMessage = getStringExtra(ERROR_MESSAGE)
             val errorStack = getStringExtra(ERROR_STACK)
-            val isDebug = getBooleanExtra(IS_DEBUG, true)
-            val mailVerify = getStringExtra(MAIL_VERIFY) ?: ""
+            val bridge = getParcelableExtra<Bridge>(BRIDGE)
+            val isOnline = getBooleanExtra(IS_ONLINE, false)
             Log.e("aaa", "$errorType")
             Log.e("aaa", "$errorMessage")
             Log.e("aaa", "$errorStack")
 
-            if (isDebug) {
-                tvError.text = errorType
-                tvMessage.text = errorMessage
-                tvStack.text = errorStack
-                linearLayout.visibility = View.VISIBLE
-            } else {
-                tvTitle.visibility = View.VISIBLE
-                tvHint.visibility = View.VISIBLE
-            }
+            bridge?.run {
+                if (isDebug) {
+                    tvError.text = errorType
+                    tvMessage.text = errorMessage
+                    tvStack.text = errorStack
+                    linearLayout.visibility = View.VISIBLE
+                } else {
+                    tvTitle.visibility = View.VISIBLE
+                    tvHint.visibility = View.VISIBLE
+                }
 
-            val sj = StringJoiner("\n")
-            sj.add(errorType)
-            sj.add(errorMessage)
-            sj.add(errorStack)
-            sendMail(sj.toString(), mailVerify)
+                // 只有非本地部署环境才会发送
+                if (isOnline) {
+                    val sj = StringJoiner("\n")
+                    sj.add(errorType)
+                    sj.add(errorMessage)
+                    sj.add(errorStack)
+                    val content = sj.toString()
+
+                    bridge.mail?.run { sendMail(content, this) }
+                    bridge.dingTalk?.run { sendDingTalk(content, this) }
+                }
+            }
         }
     }
 
-    private fun sendMail(message: String, mailVerify: String) {
-        try {
-            val mail = Mail().apply {
-                mailServerHost = SERVER_HOST
-                mailServerPort = SERVER_PORT
-                fromAddress = FROM_MAIL
-                password = mailVerify
-                toAddress = mailArr
-                subject = AppUtils.getAppName() + CRASH_TITLE
-                content = message
-//                attachFiles = arrayListOf(file)
-            }
-            MailSender.getInstance().sendMail(mail)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+
 
     fun btnReset(v: View) {
         restartApplication()
@@ -81,12 +72,7 @@ class ErrorActivity: AppCompatActivity() {
         const val ERROR_TYPE = "errorType"
         const val ERROR_MESSAGE = "errorMessage"
         const val ERROR_STACK = "errorStack"
-        const val IS_DEBUG = "isDebug"
-        const val SERVER_HOST = "smtp.qq.com"
-        const val SERVER_PORT = "587"
-        const val FROM_MAIL = "404288461@qq.com"
-        const val MAIL_VERIFY = "mailVerify"
-        const val TO_MAIL = "gr.zhu@ilabservice.com"
-        const val CRASH_TITLE = " Crash Found!!"
+        const val IS_ONLINE = "isOnline"
+        const val BRIDGE = "bridge"
     }
 }

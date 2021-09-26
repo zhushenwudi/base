@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import com.alley.openssl.OpensslUtil
 import com.tencent.bugly.crashreport.CrashReport
+import com.zhushenwudi.base.mvvm.m.Bridge
 import com.zhushenwudi.base.mvvm.v.ErrorActivity
 import com.zhushenwudi.base.utils.*
 
@@ -22,7 +23,7 @@ import com.zhushenwudi.base.utils.*
  * GetViewModelExt类的getAppViewModel方法
  */
 
-open class BaseApp(private val isDebug: Boolean, private val mailVerify: String) : Application(), ViewModelStoreOwner {
+open class BaseApp(private val bridge: Bridge) : Application(), ViewModelStoreOwner {
 
     private lateinit var mAppViewModelStore: ViewModelStore
 
@@ -40,6 +41,10 @@ open class BaseApp(private val isDebug: Boolean, private val mailVerify: String)
         mAppViewModelStore = ViewModelStore()
         SpUtils.initMMKV(this)
 
+        // 是否是上报模式
+        val onlineMode = getAppMetaData<Boolean>(this, "online_mode")
+        val buglyId = getAppMetaData<String>(this, "bugly_id")
+
         // 初始化Bugly
         val strategy = CrashReport.UserStrategy(this)
         strategy.deviceID = getDeviceSN()
@@ -56,15 +61,15 @@ open class BaseApp(private val isDebug: Boolean, private val mailVerify: String)
                         intent.putExtra(ErrorActivity.ERROR_TYPE, errorType)
                         intent.putExtra(ErrorActivity.ERROR_MESSAGE, errorMessage)
                         intent.putExtra(ErrorActivity.ERROR_STACK, errorStack)
-                        intent.putExtra(ErrorActivity.IS_DEBUG, isDebug)
-                        intent.putExtra(ErrorActivity.MAIL_VERIFY, mailVerify)
+                        intent.putExtra(ErrorActivity.BRIDGE, bridge)
+                        intent.putExtra(ErrorActivity.IS_ONLINE, onlineMode)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 } else {
-                    if (!isDebug) {
+                    if (!bridge.isDebug) {
                         restartApplication()
                     }
                 }
@@ -72,14 +77,10 @@ open class BaseApp(private val isDebug: Boolean, private val mailVerify: String)
             }
         })
 
-        // 是否是上报模式
-        val onlineMode = getAppMetaData<Boolean>(this, "online_mode")
-        val buglyId = getAppMetaData<String>(this, "bugly_id")
-
         CrashReport.initCrashReport(
             this,
             if (onlineMode) buglyId else "",
-            isDebug,
+            bridge.isDebug,
             strategy
         )
     }
