@@ -5,6 +5,7 @@ import com.teprinciple.mailsender.Mail
 import com.teprinciple.mailsender.MailSender
 import com.zhushenwudi.base.mvvm.m.*
 import dev.utils.app.AppUtils
+import kotlinx.coroutines.*
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import javax.crypto.Mac
@@ -49,11 +50,13 @@ object SendUtil {
             val signData = mac.doFinal(strToSign.toByteArray(StandardCharsets.UTF_8))
             val sign = URLEncoder.encode(EncodeUtil().encode(signData), ENCODER)
             val url = "${DING_TALK_URL}?access_token=${dingTalkBean.token}&sign=${sign}&timestamp=${timestamp}"
-            OkGo.post<String>(url)
-                .tag(this)
-                .headers(HEADER_KEY, HEADER_VALUE)
-                .upJson(toJson(dingTalk))
-                .execute()
+            MainScope().launch(Dispatchers.IO) {
+                OkGo.post<String>(url)
+                    .tag(this)
+                    .headers(HEADER_KEY, HEADER_VALUE)
+                    .upJson(toJson(dingTalk))
+                    .execute()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
