@@ -154,12 +154,6 @@ public class TopNiftyView {
         return this;
     }
 
-    public TopNiftyView setWidth(int size) {
-        TextView tv = this.mView.getMessageView();
-        tv.setMaxWidth(size);
-        return this;
-    }
-
     public TopNiftyView setTextSize(int size) {
         TextView tv = this.mView.getMessageView();
         tv.setTextSize(size);
