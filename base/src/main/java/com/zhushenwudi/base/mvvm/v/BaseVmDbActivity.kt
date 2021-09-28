@@ -20,21 +20,11 @@ abstract class BaseVmDbActivity<VM : BaseAppViewModel, DB : ViewDataBinding> : B
         super.onCreate(savedInstanceState)
     }
 
-    override fun onResume() {
-        super.onResume()
-        startLockTask()
-    }
-
     /**
      * 创建DataBinding
      */
     override fun initDataBind() {
         mDatabind = DataBindingUtil.setContentView(this, layoutId())
         mDatabind.lifecycleOwner = this
-    }
-
-    override fun onStop() {
-        stopLockTask()
-        super.onStop()
     }
 }

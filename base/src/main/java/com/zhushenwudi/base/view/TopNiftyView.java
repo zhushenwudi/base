@@ -154,6 +154,12 @@ public class TopNiftyView {
         return this;
     }
 
+    public TopNiftyView setTextSize(int size) {
+        TextView tv = this.mView.getMessageView();
+        tv.setTextSize(size);
+        return this;
+    }
+
     public TopNiftyView setText(CharSequence message) {
         TextView tv = this.mView.getMessageView();
         tv.setText(message);
