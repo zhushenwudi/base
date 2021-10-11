@@ -156,12 +156,6 @@ fun asciiToString(value: String): String {
     return sbu.toString()
 }
 
-@SuppressLint("SimpleDateFormat")
-fun convertTimestamp2Date(time: Long): String {
-    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    return simpleDateFormat.format(Date(time))
-}
-
 // 重启应用程序
 fun restartApplication() {
     val intent = AppUtils.getPackageManager().getLaunchIntentForPackage(AppUtils.getPackageName())
