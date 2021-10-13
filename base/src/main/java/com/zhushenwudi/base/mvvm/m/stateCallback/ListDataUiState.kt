@@ -1,10 +1,13 @@
 package com.zhushenwudi.base.mvvm.m.stateCallback
 
+import androidx.annotation.Keep
+
 /**
  * 作者　: hegaojian
  * 时间　: 2020/3/3
  * 描述　: 列表数据状态类
  */
+@Keep
 data class ListDataUiState<T>(
     //是否请求成功
     val isSuccess: Boolean,

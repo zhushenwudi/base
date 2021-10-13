@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdkVersion 25
         targetSdkVersion 30
-        versionCode 10207
-        versionName "1.2.7"
+        versionCode 10208
+        versionName "1.2.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -115,8 +115,6 @@ dependencies {
     // bugly 异常上报
     api 'com.tencent.bugly:crashreport:3.3.9'
     api 'com.tencent.bugly:nativecrashreport:3.8.0'
-    // 内存泄露监测
-    debugApi 'com.squareup.leakcanary:leakcanary-android:2.7'
     api 'com.github.zhushenwudi:openssl:1.0'
     // com.ilab.login
     api 'org.apache.commons:commons-lang3:3.12.0'

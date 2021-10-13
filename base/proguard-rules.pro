@@ -1,1 +1,0 @@
--keep class com.zhushenwudi.base.mvvm.m.** { *; }
