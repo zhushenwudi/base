@@ -9,9 +9,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.zhushenwudi.base.R
 import com.zhushenwudi.base.mvvm.m.Bridge
+import com.zhushenwudi.base.utils.DateUtils
 import com.zhushenwudi.base.utils.SendUtil.sendDingTalk
 import com.zhushenwudi.base.utils.SendUtil.sendMail
 import com.zhushenwudi.base.utils.restartApplication
+import dev.utils.app.AppUtils
 import java.util.*
 
 class ErrorActivity: AppCompatActivity() {
@@ -50,8 +52,15 @@ class ErrorActivity: AppCompatActivity() {
                 // 只有非本地部署环境才会发送
                 if (isOnline) {
                     val sj = StringJoiner("\n")
-                    sj.add(errorType)
+                    val mode = if (isDebug) "Debug" else "Release"
+                    sj.add("★ 项目名: ${AppUtils.getAppName()} (${mode}) ★")
+                    versionName?.run { sj.add("★ 版本号: $versionName ★") }
+                    serialNo?.run { sj.add("★ 设备号: $serialNo ★") }
+                    sj.add("★ 时间: ${DateUtils.getDateFormatString(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss")} ★")
+                    sj.add("★ 异常类型: $errorType ★")
+                    sj.add("★ 异常信息 ★")
                     sj.add(errorMessage)
+                    sj.add("★ 堆栈信息 ★")
                     sj.add(errorStack)
                     val content = sj.toString()
 
@@ -61,8 +70,6 @@ class ErrorActivity: AppCompatActivity() {
             }
         }
     }
-
-
 
     fun btnReset(v: View) {
         restartApplication()

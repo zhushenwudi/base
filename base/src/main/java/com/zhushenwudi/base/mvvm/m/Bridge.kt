@@ -8,6 +8,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Bridge(
     var isDebug: Boolean,
+    var versionName: String? = null,
+    var serialNo: String? = null,
     var mail: MailBean? = null,
     var dingTalk: DingTalkBean? = null
 ) : Parcelable
