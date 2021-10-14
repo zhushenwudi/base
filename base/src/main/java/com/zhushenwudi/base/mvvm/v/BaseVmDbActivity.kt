@@ -3,6 +3,7 @@ package com.zhushenwudi.base.mvvm.v
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.noober.background.BackgroundLibrary
 import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 
 /**
@@ -17,6 +18,7 @@ abstract class BaseVmDbActivity<VM : BaseAppViewModel, DB : ViewDataBinding> : B
 
     override fun onCreate(savedInstanceState: Bundle?) {
         userDataBinding(true)
+        BackgroundLibrary.inject2(this)
         super.onCreate(savedInstanceState)
     }
 

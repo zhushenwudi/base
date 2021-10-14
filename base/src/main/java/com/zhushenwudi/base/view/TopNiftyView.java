@@ -100,7 +100,7 @@ public class TopNiftyView {
         return make(activity, activity.getResources().getText(resId), duration, actionBarHeight);
     }
 
-    public static int dip2px(Context context, float dpValue) {
+    private static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }

@@ -3,6 +3,7 @@ package com.zhushenwudi.base.utils
 import android.content.Context
 import android.os.Build
 import android.text.TextUtils
+import android.view.View
 
 /**
  * 显示设备信息工具类
@@ -138,3 +139,24 @@ object DensityUtils {
         "V8526" //桑菲V8526
     )
 }
+
+fun View.sp2px(sp: Float) = DensityUtils.sp2px(this.context, sp)
+fun Context.sp2px(sp: Float) = DensityUtils.sp2px(this, sp)
+
+fun View.dip2px(dip: Float) = DensityUtils.dip2px(this.context, dip)
+fun Context.dip2px(dip: Float) = DensityUtils.dip2px(this, dip)
+
+fun View.px2dip(px: Float) = DensityUtils.px2dip(this.context, px)
+fun Context.px2dip(px: Float) = DensityUtils.px2dip(this, px)
+
+fun View.screenWidth() = DensityUtils.getDisplayWidth(this.context)
+fun Context.screenWidth() = DensityUtils.getDisplayWidth(this)
+
+fun View.getDisplayHeight() = DensityUtils.getDisplayHeight(this.context)
+fun Context.getDisplayHeight() = DensityUtils.getDisplayHeight(this)
+
+fun View.getDensity() = DensityUtils.getDensity(this.context)
+fun Context.getDensity() = DensityUtils.getDensity(this)
+
+fun View.getDensityDpi() = DensityUtils.getDensityDpi(this.context)
+fun Context.getDensityDpi() = DensityUtils.getDensityDpi(this)

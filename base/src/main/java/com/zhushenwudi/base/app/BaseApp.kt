@@ -3,7 +3,6 @@ package com.zhushenwudi.base.app
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -14,10 +13,8 @@ import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
 import com.zhushenwudi.base.mvvm.m.Bridge
 import com.zhushenwudi.base.mvvm.v.ErrorActivity
-import com.zhushenwudi.base.utils.*
-import com.zhushenwudi.base.utils.ActivityMessenger.finish
-import dev.utils.app.AppUtils
-import dev.utils.app.DeviceUtils
+import com.zhushenwudi.base.utils.SpUtils
+import com.zhushenwudi.base.utils.getDeviceSN
 
 /**
  * 作者　: hegaojian

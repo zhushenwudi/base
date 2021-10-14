@@ -184,3 +184,23 @@ object DateUtils {
         return cal1[0] == cal2[0] && cal1[1] == cal2[1] && cal1[6] == cal2[6]
     }
 }
+
+/**
+ * 时间戳转格式化字符串
+ */
+fun timestamp2str(ts: Long, df: String = "yyyy-MM-dd HH:mm:ss") = DateUtils.getDateFormatString(ts, df)
+
+/**
+ * 格式化字符串转日期
+ */
+fun str2date(dateStr: String, df: String = "yyyy-MM-dd HH:mm:ss") = DateUtils.strToDate(dateStr, df)
+
+/**
+ * 格式化字符串转时间戳
+ */
+fun str2timestamp(dateStr: String, df: String = "yyyy-MM-dd HH:mm:ss") = str2date(dateStr, df)?.time
+
+/**
+ * 时间戳转时分秒
+ */
+fun timestamp2Hms(ts: Long) = DateUtils.getGapTime(ts)
