@@ -40,9 +40,9 @@ object SendUtil {
         }
     }
 
-    fun sendDingTalk(content: String, dingTalkBean: DingTalkBean) {
+    fun sendDingTalk(message: String, dingTalkBean: DingTalkBean) {
         try {
-            val dingTalk = DingTalk(TextBean(content), AtBean(dingTalkBean.to))
+            val dingTalk = DingTalk(TextBean(message), AtBean(dingTalkBean.to))
             val timestamp = System.currentTimeMillis()
             val strToSign = "${timestamp}\n${dingTalkBean.secret}"
             val mac = Mac.getInstance(SHA256)

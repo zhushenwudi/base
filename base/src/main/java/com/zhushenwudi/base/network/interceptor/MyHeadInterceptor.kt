@@ -27,14 +27,14 @@ open class MyHeadInterceptor : Interceptor {
     /**
      * 添加公共Header参数
      */
-    fun addHeaderParameter(builder: Request.Builder) {
+    open fun addHeaderParameter(builder: Request.Builder) {
         builder.addHeader(BEARER_KEY, BEARER_VALUE + SpUtils.getString("token"))
     }
 
     /**
      * 添加GET请求公共参数
      */
-    fun addCommonParameter(
+    open fun addCommonParameter(
         httpUrlBuilder: HttpUrl.Builder,
         request: Request
     ): Request {

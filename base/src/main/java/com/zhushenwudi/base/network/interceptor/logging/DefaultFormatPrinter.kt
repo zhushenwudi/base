@@ -5,7 +5,7 @@ import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion
 import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion.isXml
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.jsonFormat
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.xmlFormat
-import com.zhushenwudi.base.utils.LogUtils
+import dev.utils.LogPrintUtils
 import okhttp3.MediaType
 import okhttp3.Request
 
@@ -28,7 +28,7 @@ class DefaultFormatPrinter : FormatPrinter {
         val requestBody =
             LINE_SEPARATOR + BODY_TAG + LINE_SEPARATOR + bodyString
         val tag = getTag(true)
-        LogUtils.debugInfo(tag, REQUEST_UP_LINE)
+        LogPrintUtils.dTag(tag, REQUEST_UP_LINE)
         logLines(
             tag,
             arrayOf(URL_TAG + request.url()),
@@ -44,7 +44,7 @@ class DefaultFormatPrinter : FormatPrinter {
             requestBody.split(LINE_SEPARATOR!!).toTypedArray(),
             true
         )
-        LogUtils.debugInfo(tag, END_LINE)
+        LogPrintUtils.dTag(tag, END_LINE)
     }
 
     /**
@@ -54,7 +54,7 @@ class DefaultFormatPrinter : FormatPrinter {
      */
     override fun printFileRequest(request: Request) {
         val tag = getTag(true)
-        LogUtils.debugInfo(tag, REQUEST_UP_LINE)
+        LogPrintUtils.dTag(tag, REQUEST_UP_LINE)
         logLines(
             tag,
             arrayOf(URL_TAG + request.url()),
@@ -70,7 +70,7 @@ class DefaultFormatPrinter : FormatPrinter {
             OMITTED_REQUEST,
             true
         )
-        LogUtils.debugInfo(tag, END_LINE)
+        LogPrintUtils.dTag(tag, END_LINE)
     }
 
     /**
@@ -113,7 +113,7 @@ class DefaultFormatPrinter : FormatPrinter {
             URL_TAG + responseUrl,
             N
         )
-        LogUtils.debugInfo(tag, RESPONSE_UP_LINE)
+        LogPrintUtils.dTag(tag, RESPONSE_UP_LINE)
         logLines(tag, urlLine, true)
         logLines(
             tag,
@@ -132,7 +132,7 @@ class DefaultFormatPrinter : FormatPrinter {
             responseBody.split(LINE_SEPARATOR!!).toTypedArray(),
             true
         )
-        LogUtils.debugInfo(tag, END_LINE)
+        LogPrintUtils.dTag(tag, END_LINE)
     }
 
     /**
@@ -160,7 +160,7 @@ class DefaultFormatPrinter : FormatPrinter {
             URL_TAG + responseUrl,
             N
         )
-        LogUtils.debugInfo(tag, RESPONSE_UP_LINE)
+        LogPrintUtils.dTag(tag, RESPONSE_UP_LINE)
         logLines(tag, urlLine, true)
         logLines(
             tag,
@@ -179,7 +179,7 @@ class DefaultFormatPrinter : FormatPrinter {
             OMITTED_RESPONSE,
             true
         )
-        LogUtils.debugInfo(tag, END_LINE)
+        LogPrintUtils.dTag(tag, END_LINE)
     }
 
     companion object {
@@ -246,10 +246,7 @@ class DefaultFormatPrinter : FormatPrinter {
                     val start = i * maxLongSize
                     var end = (i + 1) * maxLongSize
                     end = if (end > line.length) line.length else end
-                    LogUtils.debugInfo(
-                        resolveTag(tag),
-                        DEFAULT_LINE + line.substring(start, end)
-                    )
+                    LogPrintUtils.iTag(tag, DEFAULT_LINE + line.substring(start, end))
                 }
             }
         }

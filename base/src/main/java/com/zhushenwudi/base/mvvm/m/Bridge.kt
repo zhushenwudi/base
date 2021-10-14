@@ -1,5 +1,6 @@
 package com.zhushenwudi.base.mvvm.m
 
+import android.app.Activity
 import android.os.Parcelable
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
@@ -8,6 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Bridge(
     var isDebug: Boolean,
+    var restartActivity: Class<out Activity>,
     var versionName: String? = null,
     var serialNo: String? = null,
     var mail: MailBean? = null,
