@@ -1,5 +1,7 @@
 package com.zhushenwudi.base.ext.view
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -7,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -233,3 +236,8 @@ fun ImageView.showRoundPic(
         }
     }
 }
+
+fun View.resource(resource: Int) = context.getColor(resource)
+fun Context.resource(resource: Int) = getColor(resource)
+fun Activity.resource(resource: Int) = getColor(resource)
+fun Fragment.resource(resource: Int) = this.requireContext().getColor(resource)

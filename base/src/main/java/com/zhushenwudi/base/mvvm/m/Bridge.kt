@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Bridge(
     var isDebug: Boolean,
-    var restartActivity: Class<out Activity>,
+    var restartActivity: Class<out Activity>?,
     var versionName: String? = null,
     var serialNo: String? = null,
     var mail: MailBean? = null,

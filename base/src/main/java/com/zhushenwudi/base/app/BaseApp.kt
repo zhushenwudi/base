@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.alley.openssl.OpensslUtil
-import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
 import com.zhushenwudi.base.mvvm.m.Bridge
 import com.zhushenwudi.base.mvvm.v.ErrorActivity
 import com.zhushenwudi.base.utils.SpUtils
 import com.zhushenwudi.base.utils.getDeviceSN
+import com.zhushenwudi.base.utils.restartApplication
 
 /**
  * 作者　: hegaojian
@@ -50,23 +50,44 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
         onlineMode = getAppMetaData(this, "online_mode")
         val buglyId = getAppMetaData<String>(this, "bugly_id")
 
+        bridge.restartActivity?.run {
+            //防止项目崩溃，崩溃后打开错误界面
+            CaocConfig.Builder.create()
+                .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
+                .enabled(true)//是否启用CustomActivityOnCrash崩溃拦截机制 必须启用！不然集成这个库干啥？？？
+                .showErrorDetails(false) //是否必须显示包含错误详细信息的按钮 default: true
+                .showRestartButton(false) //是否必须显示“重新启动应用程序”按钮或“关闭应用程序”按钮default: true
+                .logErrorOnRestart(false) //是否必须重新堆栈堆栈跟踪 default: true
+                .trackActivities(true) //是否必须跟踪用户访问的活动及其生命周期调用 default: false
+                .minTimeBetweenCrashesMs(2000) //应用程序崩溃之间必须经过的时间 default: 3000
+                .restartActivity(bridge.restartActivity) // 重启的activity
+                .errorActivity(ErrorActivity::class.java) //发生错误跳转的activity
+                .apply()
+        }
+
         // 初始化Bugly
         val strategy = CrashReport.UserStrategy(this)
         strategy.deviceID = getDeviceSN()
-        Bugly.init(this, buglyId, bridge.isDebug)
+        strategy.setCrashHandleCallback(object : CrashReport.CrashHandleCallback() {
+            override fun onCrashHandleStart(
+                crashType: Int,
+                errorType: String,
+                errorMessage: String,
+                errorStack: String
+            ): Map<String, String>? {
+                if (crashType >= 2 && !bridge.isDebug) {
+                    restartApplication()
+                }
+                return null
+            }
+        })
 
-        //防止项目崩溃，崩溃后打开错误界面
-        CaocConfig.Builder.create()
-            .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
-            .enabled(true)//是否启用CustomActivityOnCrash崩溃拦截机制 必须启用！不然集成这个库干啥？？？
-            .showErrorDetails(false) //是否必须显示包含错误详细信息的按钮 default: true
-            .showRestartButton(false) //是否必须显示“重新启动应用程序”按钮或“关闭应用程序”按钮default: true
-            .logErrorOnRestart(false) //是否必须重新堆栈堆栈跟踪 default: true
-            .trackActivities(true) //是否必须跟踪用户访问的活动及其生命周期调用 default: false
-            .minTimeBetweenCrashesMs(2000) //应用程序崩溃之间必须经过的时间 default: 3000
-            .restartActivity(bridge.restartActivity) // 重启的activity
-            .errorActivity(ErrorActivity::class.java) //发生错误跳转的activity
-            .apply()
+        CrashReport.initCrashReport(
+            this,
+            if (onlineMode) buglyId else "",
+            bridge.isDebug,
+            strategy
+        )
     }
 
     /**
