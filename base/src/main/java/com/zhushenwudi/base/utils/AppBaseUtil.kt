@@ -115,7 +115,7 @@ suspend fun startPolling(intervals: Long, delay: Long = 0, block: () -> Unit) {
         }
     }
         .catch { Log.e("flow", "startPolling: $it") }
-        .flowOn(Dispatchers.Main)
+        .flowOn(Dispatchers.Default)
         .collect { block.invoke() }
 }
 

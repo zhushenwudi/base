@@ -75,7 +75,7 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
                 errorMessage: String,
                 errorStack: String
             ): Map<String, String>? {
-                if (crashType >= 2 && !bridge.isDebug) {
+                if ((bridge.restartActivity == null || crashType >= 2) && !bridge.isDebug) {
                     restartApplication()
                 }
                 return null
