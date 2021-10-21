@@ -1,11 +1,11 @@
 package com.zhushenwudi.base.network.interceptor.logging
 
 import android.text.TextUtils
+import android.util.Log
 import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion.isJson
 import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion.isXml
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.jsonFormat
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.xmlFormat
-import dev.utils.LogPrintUtils
 import okhttp3.MediaType
 import okhttp3.Request
 
@@ -15,6 +15,9 @@ import okhttp3.Request
  * 描述　:
  */
 class DefaultFormatPrinter : FormatPrinter {
+
+    private var appendTag = ""
+
     /**
      * 打印网络请求信息, 当网络请求时 {[okhttp3.RequestBody]} 可以解析的情况
      *
@@ -25,10 +28,11 @@ class DefaultFormatPrinter : FormatPrinter {
         request: Request,
         bodyString: String
     ) {
+        appendTag = URL_TAG + request.url()
         val requestBody =
             LINE_SEPARATOR + BODY_TAG + LINE_SEPARATOR + bodyString
         val tag = getTag(true)
-        LogPrintUtils.dTag(tag, REQUEST_UP_LINE)
+        Log.d(tag, REQUEST_UP_LINE)
         logLines(
             tag,
             arrayOf(URL_TAG + request.url()),
@@ -44,7 +48,7 @@ class DefaultFormatPrinter : FormatPrinter {
             requestBody.split(LINE_SEPARATOR!!).toTypedArray(),
             true
         )
-        LogPrintUtils.dTag(tag, END_LINE)
+        Log.d(tag, END_LINE)
     }
 
     /**
@@ -53,8 +57,9 @@ class DefaultFormatPrinter : FormatPrinter {
      * @param request
      */
     override fun printFileRequest(request: Request) {
+        appendTag = URL_TAG + request.url()
         val tag = getTag(true)
-        LogPrintUtils.dTag(tag, REQUEST_UP_LINE)
+        Log.d(tag, REQUEST_UP_LINE)
         logLines(
             tag,
             arrayOf(URL_TAG + request.url()),
@@ -70,7 +75,7 @@ class DefaultFormatPrinter : FormatPrinter {
             OMITTED_REQUEST,
             true
         )
-        LogPrintUtils.dTag(tag, END_LINE)
+        Log.d(tag, END_LINE)
     }
 
     /**
@@ -97,6 +102,7 @@ class DefaultFormatPrinter : FormatPrinter {
         message: String,
         responseUrl: String
     ) {
+        appendTag = URL_TAG + responseUrl
         var bodyString = bodyString
         bodyString =
             when {
@@ -113,7 +119,7 @@ class DefaultFormatPrinter : FormatPrinter {
             URL_TAG + responseUrl,
             N
         )
-        LogPrintUtils.dTag(tag, RESPONSE_UP_LINE)
+        Log.d(tag, RESPONSE_UP_LINE)
         logLines(tag, urlLine, true)
         logLines(
             tag,
@@ -132,7 +138,7 @@ class DefaultFormatPrinter : FormatPrinter {
             responseBody.split(LINE_SEPARATOR!!).toTypedArray(),
             true
         )
-        LogPrintUtils.dTag(tag, END_LINE)
+        Log.d(tag, END_LINE)
     }
 
     /**
@@ -155,12 +161,13 @@ class DefaultFormatPrinter : FormatPrinter {
         message: String,
         responseUrl: String
     ) {
+        appendTag = URL_TAG + responseUrl
         val tag = getTag(false)
         val urlLine = arrayOf<String?>(
             URL_TAG + responseUrl,
             N
         )
-        LogPrintUtils.dTag(tag, RESPONSE_UP_LINE)
+        Log.d(tag, RESPONSE_UP_LINE)
         logLines(tag, urlLine, true)
         logLines(
             tag,
@@ -179,7 +186,15 @@ class DefaultFormatPrinter : FormatPrinter {
             OMITTED_RESPONSE,
             true
         )
-        LogPrintUtils.dTag(tag, END_LINE)
+        Log.d(tag, END_LINE)
+    }
+
+    private fun getTag(isRequest: Boolean): String {
+        return if (isRequest) {
+            "$TAG-Request-$appendTag"
+        } else {
+            "$TAG-Response-$appendTag"
+        }
     }
 
     companion object {
@@ -246,7 +261,10 @@ class DefaultFormatPrinter : FormatPrinter {
                     val start = i * maxLongSize
                     var end = (i + 1) * maxLongSize
                     end = if (end > line.length) line.length else end
-                    LogPrintUtils.iTag(tag, DEFAULT_LINE + line.substring(start, end))
+                    Log.d(
+                        resolveTag(tag),
+                        DEFAULT_LINE + line.substring(start, end)
+                    )
                 }
             }
         }
@@ -344,14 +362,6 @@ class DefaultFormatPrinter : FormatPrinter {
                 }
             }
             return builder.toString()
-        }
-
-        private fun getTag(isRequest: Boolean): String {
-            return if (isRequest) {
-                "$TAG-Request"
-            } else {
-                "$TAG-Response"
-            }
         }
     }
 }
