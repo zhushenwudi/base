@@ -6,6 +6,8 @@ import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion
 import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion.isXml
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.jsonFormat
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.xmlFormat
+import dev.utils.common.encrypt.MD5Utils
+import dev.utils.common.encrypt.MD5Utils.md5
 import okhttp3.MediaType
 import okhttp3.Request
 
@@ -28,7 +30,7 @@ class DefaultFormatPrinter : FormatPrinter {
         request: Request,
         bodyString: String
     ) {
-        appendTag = URL_TAG + request.url()
+        appendTag = md5(URL_TAG + request.url())
         val requestBody =
             LINE_SEPARATOR + BODY_TAG + LINE_SEPARATOR + bodyString
         val tag = getTag(true)
@@ -57,7 +59,7 @@ class DefaultFormatPrinter : FormatPrinter {
      * @param request
      */
     override fun printFileRequest(request: Request) {
-        appendTag = URL_TAG + request.url()
+        appendTag = md5(URL_TAG + request.url())
         val tag = getTag(true)
         Log.d(tag, REQUEST_UP_LINE)
         logLines(
@@ -102,7 +104,7 @@ class DefaultFormatPrinter : FormatPrinter {
         message: String,
         responseUrl: String
     ) {
-        appendTag = URL_TAG + responseUrl
+        appendTag = md5(URL_TAG + responseUrl)
         var bodyString = bodyString
         bodyString =
             when {
@@ -161,7 +163,7 @@ class DefaultFormatPrinter : FormatPrinter {
         message: String,
         responseUrl: String
     ) {
-        appendTag = URL_TAG + responseUrl
+        appendTag = md5(URL_TAG + responseUrl)
         val tag = getTag(false)
         val urlLine = arrayOf<String?>(
             URL_TAG + responseUrl,
