@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-noarg'
     id 'kotlin-kapt'
+    id 'io.sentry.android.gradle' version "2.1.5"
 }
 
 android {
@@ -45,6 +46,12 @@ android {
 
 noArg {
     annotation("com.zhushenwudi.base.utils.NoArg")
+}
+
+sentry {
+    autoUpload = true
+    uploadNativeSymbols = false
+    includeNativeSources = false
 }
 
 dependencies {
@@ -130,4 +137,8 @@ dependencies {
     api 'cat.ereza:customactivityoncrash:2.3.0'
     // 通过标签直接生成shape  https://github.com/JavaNoober/BackgroundLibrary/wiki/3%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
     api 'com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.2'
+    //sentry 崩溃收集
+    implementation 'io.sentry:sentry-android:1.7.16'
+    //标准化日志
+    implementation 'org.slf4j:slf4j-nop:1.7.25'
 }
