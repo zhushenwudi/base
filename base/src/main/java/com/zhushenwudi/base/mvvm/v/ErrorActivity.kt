@@ -14,8 +14,8 @@ import com.zhushenwudi.base.app.BaseApp
 import com.zhushenwudi.base.utils.DateUtils
 import com.zhushenwudi.base.utils.SendUtil.sendDingTalk
 import com.zhushenwudi.base.utils.SendUtil.sendMail
-import com.zhushenwudi.base.utils.SentryUtil
 import dev.utils.app.AppUtils
+import io.sentry.Sentry
 import java.util.*
 
 class ErrorActivity: AppCompatActivity() {
@@ -55,8 +55,6 @@ class ErrorActivity: AppCompatActivity() {
                 if (BaseApp.instance.onlineMode) {
                     mail?.run { sendMail(message, this) }
                     dingTalk?.run { sendDingTalk(message, this) }
-                } else {
-                    SentryUtil.sendSentryException(Exception(message))
                 }
             }
         }
