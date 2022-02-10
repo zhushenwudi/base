@@ -49,14 +49,14 @@ noArg {
 
 dependencies {
     // 基础 UI
-    api 'androidx.appcompat:appcompat:1.4.0'
-    api 'androidx.constraintlayout:constraintlayout:2.1.2'
+    api 'androidx.appcompat:appcompat:1.4.1'
+    api 'androidx.constraintlayout:constraintlayout:2.1.3'
     api "androidx.recyclerview:recyclerview:1.2.1"
     // kotlin
     api 'androidx.core:core-ktx:1.7.0'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
-    api "androidx.fragment:fragment-ktx:1.4.0"
+    api "androidx.fragment:fragment-ktx:1.4.1"
     // lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     api 'androidx.lifecycle:lifecycle-common-java8:2.4.0'
@@ -67,8 +67,8 @@ dependencies {
     api "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
     api 'com.kunminx.arch:unpeek-livedata:7.2.0-beta1'
     // 路由
-    api 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    api 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    api 'androidx.navigation:navigation-fragment-ktx:2.4.0'
+    api 'androidx.navigation:navigation-ui-ktx:2.4.0'
 
     /** third party **/
     // 网络请求
@@ -131,5 +131,5 @@ dependencies {
     // 通过标签直接生成shape  https://github.com/JavaNoober/BackgroundLibrary/wiki/3%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
     api 'com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.2'
     //sentry 崩溃收集
-    api 'io.sentry:sentry-android:5.5.1'
+    api 'io.sentry:sentry-android:5.5.2'
 }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,7 +34,7 @@ public class TopNiftyView {
     public static final int LENGTH_SHORT = -1;
     private final ViewGroup mParent;
     private final Context mContext;
-    private final TopNiftyView.SnackbarLayout mView;
+    private TopNiftyView.SnackbarLayout mView;
     private final TopNiftyViewManager.Callback mManagerCallback = new TopNiftyViewManager.Callback() {
         public void show() {
             TopNiftyView.sHandler.sendMessage(TopNiftyView.sHandler.obtainMessage(0, TopNiftyView.this));
@@ -100,6 +101,10 @@ public class TopNiftyView {
         return make(activity, activity.getResources().getText(resId), duration, actionBarHeight);
     }
 
+    public ViewGroup.LayoutParams getLayout() {
+        return mView.getLayoutParams();
+    }
+
     private static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
@@ -112,6 +117,13 @@ public class TopNiftyView {
 
     public TopNiftyView setAction(@StringRes int resId, OnClickListener listener) {
         return this.setAction(this.mContext.getText(resId), listener);
+    }
+
+    public TopNiftyView setImage(int image) {
+        ImageView img = this.mView.getImageView();
+        img.setVisibility(View.VISIBLE);
+        img.setImageResource(image);
+        return this;
     }
 
     public TopNiftyView setAction(CharSequence text, final OnClickListener listener) {
@@ -262,6 +274,7 @@ public class TopNiftyView {
     public static class SnackbarLayout extends LinearLayout {
         private TextView mMessageView;
         private TextView mActionView;
+        private ImageView mImageView;
         private int mMaxWidth;
         private int mMaxInlineActionWidth;
         private TopNiftyView.SnackbarLayout.OnLayoutChangeListener mOnLayoutChangeListener;
@@ -297,6 +310,7 @@ public class TopNiftyView {
             super.onFinishInflate();
             this.mMessageView = this.findViewById(R.id.snackbar_text);
             this.mActionView = this.findViewById(R.id.snackbar_action);
+            this.mImageView = this.findViewById(R.id.image);
         }
 
         TextView getMessageView() {
@@ -305,6 +319,10 @@ public class TopNiftyView {
 
         TextView getActionView() {
             return this.mActionView;
+        }
+
+        ImageView getImageView() {
+            return this.mImageView;
         }
 
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
