@@ -215,19 +215,40 @@ fun <T, BD : ViewDataBinding> BaseQuickAdapter<T, BaseDataBindingHolder<BD>>.loa
     return page
 }
 
-fun ImageView.showRoundPic(
+fun ImageView.showPic(
     pic: String?,
-    defPhoto: Int? = R.drawable.icon_def,
+    defPhoto: Int = R.drawable.icon_def,
     sideWidth: Int = 64
 ) {
     if (pic.isNullOrEmpty()) {
-        load(defPhoto!!) {
+        load(defPhoto) {
+            crossfade(false)
+            size(sideWidth, sideWidth)
+        }
+    } else {
+        load(defPhoto) {
+            crossfade(false)
+            placeholder(defPhoto)
+            error(defPhoto)
+            size(sideWidth, sideWidth)
+            transformations(CircleCropTransformation())
+        }
+    }
+}
+
+fun ImageView.showRoundPic(
+    pic: String?,
+    defPhoto: Int = R.drawable.icon_def,
+    sideWidth: Int = 64
+) {
+    if (pic.isNullOrEmpty()) {
+        load(defPhoto) {
             crossfade(false)
             size(sideWidth, sideWidth)
             transformations(CircleCropTransformation())
         }
     } else {
-        load(defPhoto!!) {
+        load(defPhoto) {
             crossfade(false)
             placeholder(defPhoto)
             error(defPhoto)
