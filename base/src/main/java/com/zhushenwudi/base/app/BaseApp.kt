@@ -67,7 +67,7 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
                     bridge.mail?.run { sendMail(sb.toString(), this) }
                 }
 
-                Thread.sleep(500)
+                Thread.sleep(1000)
                 restartApplication()
             }
 
