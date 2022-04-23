@@ -15,8 +15,10 @@ import com.zhushenwudi.base.mvvm.m.Handle
 import com.zhushenwudi.base.mvvm.v.ErrorActivity
 import com.zhushenwudi.base.utils.DateUtils
 import com.zhushenwudi.base.utils.SendUtil.sendDingTalk
+import com.zhushenwudi.base.utils.SendUtil.sendMail
 import com.zhushenwudi.base.utils.SpUtils
 import com.zhushenwudi.base.utils.restartApplication
+import dev.utils.LogPrintUtils
 import dev.utils.app.AppUtils
 import me.jessyan.autosize.AutoSizeConfig
 import xcrash.ICrashCallback
@@ -62,21 +64,20 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
                 TombstoneManager.deleteTombstone(logPath)
                 if (onlineMode) {
                     bridge.dingTalk?.run { sendDingTalk(sb.toString(), this) }
+                    bridge.mail?.run { sendMail(sb.toString(), this) }
                 }
 
-                Thread {
-                    Thread.sleep(1000)
-                    restartApplication()
-                }.start()
+                Thread.sleep(500)
+                restartApplication()
             }
 
             XCrash.init(
                 this, XCrash.InitParameters()
-                    .setJavaRethrow(true)
+                    .setJavaRethrow(false)
                     .setJavaDumpAllThreadsWhiteList(arrayOf("^main$", "^Binder:.*", ".*Finalizer.*"))
                     .setJavaDumpAllThreadsCountMax(10)
                     .setJavaCallback(callback)
-                    .setNativeRethrow(true)
+                    .setNativeRethrow(false)
                     .setNativeLogCountMax(10)
                     .setNativeDumpAllThreadsWhiteList(
                         arrayOf(
@@ -89,7 +90,7 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
                     )
                     .setNativeDumpAllThreadsCountMax(10)
                     .setNativeCallback(callback)
-                    .setAnrRethrow(true)
+                    .setAnrRethrow(false)
                     .setAnrLogCountMax(10)
                     .setAnrCallback(callback)
                     .setPlaceholderCountMax(3)
@@ -125,6 +126,7 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
             .errorActivity(ErrorActivity::class.java) //发生错误跳转的activity
             .apply()
 
+        LogPrintUtils.setPrintLog(bridge.isDebug)
         AutoSizeConfig.getInstance().setLog(bridge.isDebug)
         Aria.init(this)
     }

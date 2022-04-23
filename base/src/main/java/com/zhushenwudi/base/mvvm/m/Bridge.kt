@@ -19,6 +19,7 @@ data class Bridge(
 
 @Keep
 enum class Handle {
+    NO,
     CACO,
     XCRASH
 }
