@@ -11,8 +11,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath "org.jetbrains.kotlin:kotlin-noarg:1.6.20"
-        // bugly 符号表
-        classpath 'com.tencent.bugly:symtabfileuploader:2.2.1'
     }
 }
 
