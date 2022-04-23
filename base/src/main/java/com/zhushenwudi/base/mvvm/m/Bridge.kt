@@ -9,12 +9,19 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Bridge(
     var isDebug: Boolean,
-    var restartActivity: Class<out Activity>?,
+    var crashHandler: Handle = Handle.XCRASH,
+    var restartActivity: Class<out Activity>,
     var versionName: String? = null,
     var serialNo: String? = null,
     var mail: MailBean? = null,
     var dingTalk: DingTalkBean? = null
 ) : Parcelable
+
+@Keep
+enum class Handle {
+    CACO,
+    XCRASH
+}
 
 @Keep
 @Parcelize

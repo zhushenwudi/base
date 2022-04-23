@@ -21,17 +21,17 @@ object MqttManager {
     fun connect(
         url: String,
         result: EventLiveData<Pair<String, String>>,
+        callback: (Boolean) -> Unit,
         username: String? = null,
         password: String? = null,
         subscribeTopic: Array<String>? = null
     ) {
         try {
-            mqttClient =
-                MqttAndroidClient(appContext, url, Build.DEVICE + System.currentTimeMillis())
+            mqttClient = MqttAndroidClient(appContext, url, Build.SERIAL)
             mqttClient?.setCallback(object : MqttCallbackExtended {
                 override fun connectionLost(cause: Throwable?) {
                     cause?.printStackTrace()
-                    LogPrintUtils.d("mqtt disconnected")
+                    callback(false)
                 }
 
                 override fun messageArrived(topic: String, message: MqttMessage) {
@@ -42,7 +42,7 @@ object MqttManager {
                 }
 
                 override fun connectComplete(reconnect: Boolean, serverURI: String?) {
-                    LogPrintUtils.d("mqtt connected")
+                    callback(true)
                     subscribeTopic?.run { subscribe(this) }
                 }
             })
@@ -52,19 +52,20 @@ object MqttManager {
             username?.run { mqttConnectOptions.userName = this }
             password?.run { mqttConnectOptions.password = toCharArray() }
             // 设置心跳
-            mqttConnectOptions.keepAliveInterval = 30
+            mqttConnectOptions.keepAliveInterval = 20
             // 设置自动重连
             mqttConnectOptions.isAutomaticReconnect = true
             // 设置建立连接时清空会话
-            mqttConnectOptions.isCleanSession = false
+            mqttConnectOptions.isCleanSession = true
+            mqttConnectOptions.connectionTimeout = 10
 
             mqttClient?.connect(mqttConnectOptions, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    callback(false)
                     exception?.printStackTrace()
-                    LogPrintUtils.d("mqtt connect fail")
                 }
             })
         } catch (e: MqttException) {
@@ -79,15 +80,7 @@ object MqttManager {
      */
     fun subscribe(topic: String, qos: Int = 0) {
         try {
-            mqttClient?.subscribe(topic, qos, null, object : IMqttActionListener {
-                override fun onSuccess(asyncActionToken: IMqttToken?) {
-                    LogPrintUtils.d("mqtt subscribe success")
-                }
-
-                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    LogPrintUtils.d("mqtt subscribe fail")
-                }
-            })
+            mqttClient?.subscribe(topic, qos, null, null)
         } catch (e: MqttException) {
             e.printStackTrace()
         }
@@ -107,15 +100,7 @@ object MqttManager {
             temp
         }
         try {
-            mqttClient?.subscribe(topics, qosArray.toIntArray(), null, object : IMqttActionListener {
-                override fun onSuccess(asyncActionToken: IMqttToken?) {
-                    LogPrintUtils.d("mqtt subscribe success")
-                }
-
-                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    LogPrintUtils.d("mqtt subscribe fail")
-                }
-            })
+            mqttClient?.subscribe(topics, qosArray.toIntArray(), null, null)
         } catch (e: MqttException) {
             e.printStackTrace()
         }
@@ -128,9 +113,22 @@ object MqttManager {
         try {
             val message = MqttMessage()
             message.payload = msg.toByteArray()
+            LogPrintUtils.d("发布的主题: $topic")
             mqttClient?.publish(topic, message)
-        } catch (e: MqttException) {
+        } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    /**
+     * 取消订阅
+     *
+     * @param topic 多主题变长参数
+     */
+    fun cancelSubscribe(vararg topic: String) {
+        try {
+            mqttClient?.unsubscribe(topic)
+        } catch (e: MqttException) {
         }
     }
 
@@ -141,7 +139,7 @@ object MqttManager {
         try {
             mqttClient?.disconnect()
             mqttClient = null
-        } catch (e: Exception) {
+        } catch (e: MqttException) {
         }
     }
 }

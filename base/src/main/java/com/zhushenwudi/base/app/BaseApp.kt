@@ -9,12 +9,20 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.alley.openssl.OpensslUtil
-import com.tencent.bugly.crashreport.CrashReport
+import com.arialyy.aria.core.Aria
 import com.zhushenwudi.base.mvvm.m.Bridge
+import com.zhushenwudi.base.mvvm.m.Handle
 import com.zhushenwudi.base.mvvm.v.ErrorActivity
+import com.zhushenwudi.base.utils.DateUtils
+import com.zhushenwudi.base.utils.SendUtil.sendDingTalk
 import com.zhushenwudi.base.utils.SpUtils
-import com.zhushenwudi.base.utils.getDeviceSN
 import com.zhushenwudi.base.utils.restartApplication
+import dev.utils.app.AppUtils
+import me.jessyan.autosize.AutoSizeConfig
+import xcrash.ICrashCallback
+import xcrash.TombstoneManager
+import xcrash.TombstoneParser
+import xcrash.XCrash
 
 /**
  * 作者　: hegaojian
@@ -37,6 +45,61 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
         return mAppViewModelStore
     }
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+
+        if (bridge.crashHandler == Handle.XCRASH) {
+            val callback = ICrashCallback { logPath, emergency ->
+                val map = TombstoneParser.parse(logPath, emergency)
+                val sb = StringBuilder()
+                val mode = if (bridge.isDebug) "Debug" else "Release"
+                sb.append("★ 项目名: ${AppUtils.getAppName()} (${mode}) ★\n")
+                bridge.versionName?.run { sb.append("★ 版本号: ${bridge.versionName} ★\n") }
+                bridge.serialNo?.run { sb.append("★ 设备号: ${bridge.serialNo} ★\n") }
+                sb.append("★ 时间: ${DateUtils.getDateFormatString(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss")} ★\n")
+                sb.append("★ 异常信息 ★\n")
+                sb.append(map["java stacktrace"] ?: "")
+                TombstoneManager.deleteTombstone(logPath)
+                if (onlineMode) {
+                    bridge.dingTalk?.run { sendDingTalk(sb.toString(), this) }
+                }
+
+                Thread {
+                    Thread.sleep(1000)
+                    restartApplication()
+                }.start()
+            }
+
+            XCrash.init(
+                this, XCrash.InitParameters()
+                    .setJavaRethrow(true)
+                    .setJavaDumpAllThreadsWhiteList(arrayOf("^main$", "^Binder:.*", ".*Finalizer.*"))
+                    .setJavaDumpAllThreadsCountMax(10)
+                    .setJavaCallback(callback)
+                    .setNativeRethrow(true)
+                    .setNativeLogCountMax(10)
+                    .setNativeDumpAllThreadsWhiteList(
+                        arrayOf(
+                            "^xcrash\\.sample$",
+                            "^Signal Catcher$",
+                            "^Jit thread pool$",
+                            ".*(R|r)ender.*",
+                            ".*Chrome.*"
+                        )
+                    )
+                    .setNativeDumpAllThreadsCountMax(10)
+                    .setNativeCallback(callback)
+                    .setAnrRethrow(true)
+                    .setAnrLogCountMax(10)
+                    .setAnrCallback(callback)
+                    .setPlaceholderCountMax(3)
+                    .setPlaceholderSizeKb(512)
+                    .setLogDir(getExternalFilesDir("xcrash").toString())
+                    .setLogFileMaintainDelayMs(1000)
+            )
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -48,46 +111,22 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
 
         // 是否是上报模式
         onlineMode = getAppMetaData(this, "online_mode")
-        val buglyId = getAppMetaData<String>(this, "bugly_id")
 
-        bridge.restartActivity?.run {
-            //防止项目崩溃，崩溃后打开错误界面
-            CaocConfig.Builder.create()
-                .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
-                .enabled(true)//是否启用CustomActivityOnCrash崩溃拦截机制 必须启用！不然集成这个库干啥？？？
-                .showErrorDetails(false) //是否必须显示包含错误详细信息的按钮 default: true
-                .showRestartButton(false) //是否必须显示“重新启动应用程序”按钮或“关闭应用程序”按钮default: true
-                .logErrorOnRestart(false) //是否必须重新堆栈堆栈跟踪 default: true
-                .trackActivities(true) //是否必须跟踪用户访问的活动及其生命周期调用 default: false
-                .minTimeBetweenCrashesMs(2000) //应用程序崩溃之间必须经过的时间 default: 3000
-                .restartActivity(bridge.restartActivity) // 重启的activity
-                .errorActivity(ErrorActivity::class.java) //发生错误跳转的activity
-                .apply()
-        }
+        //防止项目崩溃，崩溃后打开错误界面
+        CaocConfig.Builder.create()
+            .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
+            .enabled(bridge.crashHandler == Handle.CACO)//是否启用CustomActivityOnCrash崩溃拦截机制
+            .showErrorDetails(false) //是否必须显示包含错误详细信息的按钮 default: true
+            .showRestartButton(false) //是否必须显示“重新启动应用程序”按钮或“关闭应用程序”按钮default: true
+            .logErrorOnRestart(false) //是否必须重新堆栈堆栈跟踪 default: true
+            .trackActivities(true) //是否必须跟踪用户访问的活动及其生命周期调用 default: false
+            .minTimeBetweenCrashesMs(2000) //应用程序崩溃之间必须经过的时间 default: 3000
+            .restartActivity(bridge.restartActivity) // 重启的activity
+            .errorActivity(ErrorActivity::class.java) //发生错误跳转的activity
+            .apply()
 
-        // 初始化Bugly
-        val strategy = CrashReport.UserStrategy(this)
-        strategy.deviceID = getDeviceSN()
-        strategy.setCrashHandleCallback(object : CrashReport.CrashHandleCallback() {
-            override fun onCrashHandleStart(
-                crashType: Int,
-                errorType: String,
-                errorMessage: String,
-                errorStack: String
-            ): Map<String, String>? {
-                if ((bridge.restartActivity == null || crashType >= 2) && !bridge.isDebug) {
-                    restartApplication()
-                }
-                return null
-            }
-        })
-
-        CrashReport.initCrashReport(
-            this,
-            if (onlineMode) buglyId else "",
-            bridge.isDebug,
-            strategy
-        )
+        AutoSizeConfig.getInstance().setLog(bridge.isDebug)
+        Aria.init(this)
     }
 
     /**

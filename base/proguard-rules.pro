@@ -14,10 +14,6 @@
 -keep class me.jessyan.autosize.** { *; }
 -keep interface me.jessyan.autosize.** { *; }
 
-# bugly
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
-
 # keep native method
 -keepclasseswithmembernames class * {
     native <methods>;
