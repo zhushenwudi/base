@@ -3,7 +3,6 @@ package com.zhushenwudi.base.view;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-
 import java.lang.ref.WeakReference;
 
 class TopNiftyViewManager {
@@ -142,7 +141,10 @@ class TopNiftyViewManager {
 
     private void scheduleTimeoutLocked(SnackbarRecord r) {
         this.mHandler.removeCallbacksAndMessages(r);
-        this.mHandler.sendMessageDelayed(Message.obtain(this.mHandler, 0, r), r.duration == 0 ? 2750L : 1500L);
+        if (r.duration == 0) {
+            return;
+        }
+        this.mHandler.sendMessageDelayed(Message.obtain(this.mHandler, 0, r), r.duration);
     }
 
     private void handleTimeout(SnackbarRecord record) {

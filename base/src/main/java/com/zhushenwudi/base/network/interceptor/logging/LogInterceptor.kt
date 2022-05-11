@@ -17,17 +17,24 @@ import java.util.concurrent.TimeUnit
 open class LogInterceptor : Interceptor {
     private val mPrinter: FormatPrinter = DefaultFormatPrinter()
     private val printLevel = Level.ALL
-
-    constructor()
-
-    constructor(printLevel: Level?)
+    private var globalNeedPrint = true
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
+        var needPrint = false
+        chain.request().headers().get("print")?.let {
+            if (it == "all-no") {
+                globalNeedPrint = false
+            }
+            if (it == "yes") {
+                needPrint = true
+            }
+        }
         val request = chain.request()
+
         val logRequest =
-            printLevel == Level.ALL || printLevel != Level.NONE && printLevel == Level.REQUEST
-        if (logRequest) {
+            (printLevel == Level.ALL || printLevel != Level.NONE && printLevel == Level.REQUEST) && globalNeedPrint
+        if (logRequest || needPrint) {
             //打印请求信息
             if (request.body() != null && isParseable(
                     request.body()!!.contentType()
@@ -37,12 +44,13 @@ open class LogInterceptor : Interceptor {
             } else {
                 mPrinter.printFileRequest(request)
             }
+        } else {
+            Log.d("Http", chain.request().url().toString())
         }
         val logResponse =
-            printLevel == Level.ALL || printLevel != Level.NONE && printLevel == Level.RESPONSE
+            (printLevel == Level.ALL || printLevel != Level.NONE && printLevel == Level.RESPONSE) && globalNeedPrint
         val t1 = if (logResponse) System.nanoTime() else 0
-        val originalResponse: Response
-        originalResponse = try {
+        val originalResponse = try {
             chain.proceed(request)
         } catch (e: Exception) {
             e.message?.let {
@@ -56,9 +64,9 @@ open class LogInterceptor : Interceptor {
         //打印响应结果
         var bodyString: String? = null
         if (responseBody != null && isParseable(responseBody.contentType())) {
-            bodyString = printResult(request, originalResponse, logResponse)
+            bodyString = printResult(originalResponse)
         }
-        if (logResponse) {
+        if (logResponse || needPrint) {
             val segmentList =
                 request.url().encodedPathSegments()
             val header: String = if (originalResponse.networkResponse() == null) {
@@ -88,24 +96,18 @@ open class LogInterceptor : Interceptor {
     /**
      * 打印响应结果
      *
-     * @param request     [Request]
      * @param response    [Response]
-     * @param logResponse 是否打印响应结果
      * @return 解析后的响应结果
      * @throws IOException
      */
     @Throws(IOException::class)
-    private fun printResult(
-        request: Request,
-        response: Response,
-        logResponse: Boolean
-    ): String? {
+    private fun printResult(response: Response): String? {
         return try {
             //读取服务器返回的结果
             val responseBody = response.newBuilder().build().body()
             val source = responseBody!!.source()
             source.request(Long.MAX_VALUE) // Buffer the entire body.
-            val buffer = source.buffer()
+            val buffer = source.buffer
 
             //获取content的压缩类型
             val encoding = response
@@ -139,21 +141,25 @@ open class LogInterceptor : Interceptor {
             charset = contentType.charset(charset)
         }
         //content 使用 gzip 压缩
-        return if ("gzip".equals(encoding, ignoreCase = true)) {
-            //解压
-            decompressForGzip(
-                clone.readByteArray(),
-                convertCharset(charset)
-            )
-        } else if ("zlib".equals(encoding, ignoreCase = true)) {
-            //content 使用 zlib 压缩
-            decompressToStringForZlib(
-                clone.readByteArray(),
-                convertCharset(charset)
-            )
-        } else {
-            //content 没有被压缩, 或者使用其他未知压缩方式
-            clone.readString(charset)
+        return when {
+            "gzip".equals(encoding, ignoreCase = true) -> {
+                //解压
+                decompressForGzip(
+                    clone.readByteArray(),
+                    convertCharset(charset)
+                )
+            }
+            "zlib".equals(encoding, ignoreCase = true) -> {
+                //content 使用 zlib 压缩
+                decompressToStringForZlib(
+                    clone.readByteArray(),
+                    convertCharset(charset)
+                )
+            }
+            else -> {
+                //content 没有被压缩, 或者使用其他未知压缩方式
+                clone.readString(charset)
+            }
         }
     }
 
@@ -199,13 +205,13 @@ open class LogInterceptor : Interceptor {
                     charset = contentType.charset(charset)
                 }
                 var json = requestbuffer.readString(charset)
-                if (hasUrlEncoded(json!!)) {
+                if (hasUrlEncoded(json)) {
                     json = URLDecoder.decode(
                         json,
                         convertCharset(charset)
                     )
                 }
-                jsonFormat(json!!)
+                jsonFormat(json)
             } catch (e: IOException) {
                 e.printStackTrace()
                 "{\"error\": \"" + e.message + "\"}"

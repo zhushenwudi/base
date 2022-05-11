@@ -18,23 +18,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-
 import com.zhushenwudi.base.R;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class TopNiftyView {
-    public static final int LENGTH_SHORT = -1;
+    public static final int INFINITY_TIME = 0;
+    public static final int LONG_TIME = 1500;
+    public static final int SHORT_TIME = 2700;
     private final ViewGroup mParent;
     private final Context mContext;
-    private TopNiftyView.SnackbarLayout mView;
+    private final TopNiftyView.SnackbarLayout mView;
     private final TopNiftyViewManager.Callback mManagerCallback = new TopNiftyViewManager.Callback() {
         public void show() {
             TopNiftyView.sHandler.sendMessage(TopNiftyView.sHandler.obtainMessage(0, TopNiftyView.this));
@@ -321,7 +320,7 @@ public class TopNiftyView {
             return this.mActionView;
         }
 
-        ImageView getImageView() {
+        public ImageView getImageView() {
             return this.mImageView;
         }
 

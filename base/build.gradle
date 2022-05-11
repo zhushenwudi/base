@@ -124,7 +124,7 @@ dependencies {
     // 通过标签直接生成shape  https://github.com/JavaNoober/BackgroundLibrary/wiki/3%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
     api 'com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.2'
     // sentry 崩溃收集
-    api 'io.sentry:sentry-android:5.6.1'
+    api 'io.sentry:sentry-android:5.7.0'
     // 自定义下拉弹窗封装
     api 'com.github.zhushenwudi:materialspinner:1.1'
     // 版本号比对
@@ -132,5 +132,13 @@ dependencies {
     // recycler adapter (修复原作者多级折叠菜单的bug)
     api 'com.github.zhushenwudi:LibAdapter:1.1'
     // 爱奇艺崩溃拦截
-    implementation 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0'
+    api 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0'
+    // usb串口
+    api 'com.github.mik3y:usb-serial-for-android:3.4.4'
+    // JS通信桥
+    api 'com.github.lzyzsd:jsbridge:1.0.4'
+    // wrap布局
+    api 'io.github.alexmofer.widget:wraplayout:2.0.0'
+    // 跨进程通信
+    api 'com.jeremyliao:live-event-bus-x:1.7.3'
 }
