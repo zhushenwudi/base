@@ -226,7 +226,7 @@ fun ImageView.showPic(
             size(sideWidth, sideWidth)
         }
     } else {
-        load(defPhoto) {
+        load(pic) {
             crossfade(false)
             placeholder(defPhoto)
             error(defPhoto)
@@ -248,7 +248,7 @@ fun ImageView.showRoundPic(
             transformations(CircleCropTransformation())
         }
     } else {
-        load(defPhoto) {
+        load(pic) {
             crossfade(false)
             placeholder(defPhoto)
             error(defPhoto)
