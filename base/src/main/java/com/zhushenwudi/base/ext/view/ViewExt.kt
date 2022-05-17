@@ -6,8 +6,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -258,7 +260,11 @@ fun ImageView.showRoundPic(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 fun View.resource(resource: Int) = context.getColor(resource)
+@RequiresApi(Build.VERSION_CODES.M)
 fun Context.resource(resource: Int) = getColor(resource)
+@RequiresApi(Build.VERSION_CODES.M)
 fun Activity.resource(resource: Int) = getColor(resource)
+@RequiresApi(Build.VERSION_CODES.M)
 fun Fragment.resource(resource: Int) = this.requireContext().getColor(resource)

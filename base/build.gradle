@@ -62,13 +62,13 @@ dependencies {
     api 'androidx.lifecycle:lifecycle-common-java8:2.4.1'
     api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     // viewModel
-    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
     // liveData
     api "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
     api 'com.kunminx.arch:unpeek-livedata:7.2.0-beta1'
     // 路由
-    api 'androidx.navigation:navigation-fragment-ktx:2.4.0'
-    api 'androidx.navigation:navigation-ui-ktx:2.4.0'
+    api 'androidx.navigation:navigation-fragment-ktx:2.4.2'
+    api 'androidx.navigation:navigation-ui-ktx:2.4.2'
 
     /** third party **/
     // 网络请求
@@ -81,7 +81,7 @@ dependencies {
     // lottie 动画
     api 'com.airbnb.android:lottie:5.0.3'
     // gson
-    api 'com.google.code.gson:gson:2.8.7'
+    api 'com.google.code.gson:gson:2.8.9'
     // android 工具类
     api "io.github.afkt:DevAppX:2.3.6"
     // 权限请求
@@ -141,4 +141,6 @@ dependencies {
     api 'io.github.alexmofer.widget:wraplayout:2.0.0'
     // 跨进程通信
     api 'com.jeremyliao:live-event-bus-x:1.7.3'
+    // 反射
+    api "org.jetbrains.kotlin:kotlin-reflect:1.6.20"
 }

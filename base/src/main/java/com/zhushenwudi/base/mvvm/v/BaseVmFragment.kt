@@ -48,6 +48,10 @@ abstract class BaseVmFragment<VM : BaseAppViewModel> : Fragment() {
         initView(savedInstanceState)
         createObserver()
         registorDefUIChange()
+    }
+
+    override fun onResume() {
+        super.onResume()
         initData()
     }
 

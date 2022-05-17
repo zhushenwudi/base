@@ -23,11 +23,10 @@ open class LogInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var needPrint = false
         chain.request().headers().get("print")?.let {
-            if (it == "all-no") {
-                globalNeedPrint = false
-            }
-            if (it == "yes") {
-                needPrint = true
+            when (it) {
+                "all-no" -> globalNeedPrint = false
+                "yes" -> needPrint = true
+                "no" -> needPrint = false
             }
         }
         val request = chain.request()
