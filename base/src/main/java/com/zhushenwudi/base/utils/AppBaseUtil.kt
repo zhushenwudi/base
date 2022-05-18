@@ -1,5 +1,6 @@
 package com.zhushenwudi.base.utils
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent.*
@@ -18,6 +19,11 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
 import android.content.pm.ApplicationInfo
+import dev.utils.app.PathUtils
+import dev.utils.app.permission.PermissionUtils
+import dev.utils.common.FileUtils
+import dev.utils.common.ZipUtils
+import java.io.File
 
 private var mLastClick: Long = 0
 private const val TIMER = 3
@@ -172,4 +178,16 @@ fun quickExit() {
     if (quickCounts[0] > SystemClock.uptimeMillis() - 5000) {
         exitProcess(0)
     }
+}
+
+// 压缩离线日志
+suspend fun zipLog(): Boolean {
+    if (PermissionUtils.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        val logDir = PathUtils.getAppExternal().appDataPath + File.separator + "log" + File.separator
+        val outputDir = PathUtils.getSDCard().sdCardPath + File.separator + "smartlab" + File.separator
+        if (FileUtils.createOrExistsDir(outputDir)) {
+            return ZipUtils.zipFiles(FileUtils.listFilesInDir(logDir), File(outputDir + "log.zip"))
+        }
+    }
+    return false
 }

@@ -143,4 +143,6 @@ dependencies {
     api 'com.jeremyliao:live-event-bus-x:1.7.3'
     // 反射
     api "org.jetbrains.kotlin:kotlin-reflect:1.6.20"
+    // 日志
+    api 'com.elvishew:xlog:1.10.1'
 }

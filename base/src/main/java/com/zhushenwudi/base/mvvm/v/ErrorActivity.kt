@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash
+import com.elvishew.xlog.XLog
 import com.zhushenwudi.base.R
 import com.zhushenwudi.base.app.BaseApp
 import com.zhushenwudi.base.utils.DateUtils
@@ -47,6 +48,7 @@ class ErrorActivity: AppCompatActivity() {
                 sb.append("★ 异常信息 ★\n")
                 sb.append(it)
                 val message = sb.toString()
+                XLog.e(message)
                 if (BaseApp.instance.onlineMode) {
                     mail?.run { sendMail(message, this) }
                     dingTalk?.run { sendDingTalk(message, this) }

@@ -10,6 +10,14 @@ import androidx.lifecycle.ViewModelStoreOwner
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.alley.openssl.OpensslUtil
 import com.arialyy.aria.core.Aria
+import com.elvishew.xlog.LogConfiguration
+import com.elvishew.xlog.XLog
+import com.elvishew.xlog.printer.AndroidPrinter
+import com.elvishew.xlog.printer.ConsolePrinter
+import com.elvishew.xlog.printer.file.FilePrinter
+import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy2
+import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
+import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import com.zhushenwudi.base.mvvm.m.Bridge
 import com.zhushenwudi.base.mvvm.m.Handle
 import com.zhushenwudi.base.mvvm.v.ErrorActivity
@@ -20,11 +28,14 @@ import com.zhushenwudi.base.utils.SpUtils
 import com.zhushenwudi.base.utils.restartApplication
 import dev.utils.LogPrintUtils
 import dev.utils.app.AppUtils
+import dev.utils.app.PathUtils
+import dev.utils.common.FileUtils
 import me.jessyan.autosize.AutoSizeConfig
 import xcrash.ICrashCallback
 import xcrash.TombstoneManager
 import xcrash.TombstoneParser
 import xcrash.XCrash
+import java.io.File
 
 /**
  * 作者　: hegaojian
@@ -66,7 +77,7 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
                     bridge.dingTalk?.run { sendDingTalk(sb.toString(), this) }
                     bridge.mail?.run { sendMail(sb.toString(), this) }
                 }
-
+                XLog.e(sb.toString())
                 Thread.sleep(1000)
                 restartApplication()
             }
@@ -129,6 +140,36 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
         LogPrintUtils.setPrintLog(bridge.isDebug)
         AutoSizeConfig.getInstance().setLog(bridge.isDebug)
         Aria.init(this)
+        initLogger()
+    }
+
+    private fun initLogger() {
+        val config = LogConfiguration.Builder()
+            .tag("iLab")
+            .enableThreadInfo() // 允许打印线程信息，默认禁止
+            .enableStackTrace(2) // 允许打印深度为 2 的调用栈信息，默认禁止
+            .enableBorder() // 允许打印日志边框，默认禁止
+            .build()
+
+        val androidPrinter = AndroidPrinter(true) // 通过 android.util.Log 打印日志的打印器
+
+        val consolePrinter = ConsolePrinter() // 通过 System.out 打印日志到控制台的打印器
+
+        val logDir = PathUtils.getAppExternal().appDataPath + File.separator + "log"
+        FileUtils.createOrExistsDir(logDir)
+
+        val filePrinter = FilePrinter.Builder(logDir) // 指定保存日志文件的路径
+            .fileNameGenerator(DateFileNameGenerator()) // 指定日志文件名生成器，默认为 ChangelessFileNameGenerator("log")
+            .backupStrategy(FileSizeBackupStrategy2(1024*1024, FileSizeBackupStrategy2.NO_LIMIT)) // 指定日志文件备份策略，默认为 FileSizeBackupStrategy(1024 * 1024)
+            .cleanStrategy(FileLastModifiedCleanStrategy(2626560000)) // 指定日志文件清除策略，默认为 NeverCleanStrategy()
+            .build()
+
+        XLog.init( // 初始化 XLog
+            config,  // 指定日志配置，如果不指定，会默认使用 new LogConfiguration.Builder().build()
+            androidPrinter,  // 添加任意多的打印器。如果没有添加任何打印器，会默认使用 AndroidPrinter(Android)/ConsolePrinter(java)
+            consolePrinter,
+            filePrinter
+        )
     }
 
     /**
