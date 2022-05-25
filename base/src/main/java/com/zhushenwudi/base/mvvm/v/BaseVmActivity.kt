@@ -1,8 +1,11 @@
 package com.zhushenwudi.base.mvvm.v
 
 import android.os.Bundle
+import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.zhushenwudi.base.R
 import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 import com.zhushenwudi.base.ext.getVmClazz
 import com.zhushenwudi.base.network.manager.NetState
@@ -14,11 +17,6 @@ import com.zhushenwudi.base.network.manager.NetworkStateManager
  * 描述　: ViewModelActivity基类，把ViewModel注入进来了
  */
 abstract class BaseVmActivity<VM : BaseAppViewModel> : AppCompatActivity() {
-
-    /**
-     * 是否需要使用DataBinding 供子类BaseVmDbActivity修改，用户请慎动
-     */
-    private var isUserDb = false
 
     lateinit var mViewModel: VM
 
@@ -32,11 +30,8 @@ abstract class BaseVmActivity<VM : BaseAppViewModel> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (!isUserDb) {
-            setContentView(layoutId())
-        } else {
-            initDataBind()
-        }
+        setContentView(R.layout.activity_base)
+        findViewById<FrameLayout>(R.id.baseContentView).addView(initDataBind())
         init(savedInstanceState)
     }
 
@@ -98,12 +93,8 @@ abstract class BaseVmActivity<VM : BaseAppViewModel> : AppCompatActivity() {
         }
     }
 
-    fun userDataBinding(isUserDb: Boolean) {
-        this.isUserDb = isUserDb
-    }
-
     /**
      * 供子类BaseVmDbActivity 初始化Databinding操作
      */
-    open fun initDataBind() {}
+    abstract fun initDataBind(): View
 }

@@ -1,10 +1,12 @@
 package com.zhushenwudi.base.mvvm.v
 
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
+import android.view.View
 import androidx.databinding.ViewDataBinding
+import androidx.viewbinding.ViewBinding
 import com.noober.background.BackgroundLibrary
 import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
+import com.zhushenwudi.base.utils.inflateBinding
 
 /**
  * 作者　: hegaojian
@@ -14,10 +16,11 @@ import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
  */
 abstract class BaseVmDbActivity<VM : BaseAppViewModel, DB : ViewDataBinding> : BaseVmActivity<VM>() {
 
-    lateinit var mDatabind: DB
+    lateinit var bind: DB
+
+    override fun layoutId() = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        userDataBinding(true)
         BackgroundLibrary.inject2(this)
         super.onCreate(savedInstanceState)
     }
@@ -25,8 +28,8 @@ abstract class BaseVmDbActivity<VM : BaseAppViewModel, DB : ViewDataBinding> : B
     /**
      * 创建DataBinding
      */
-    override fun initDataBind() {
-        mDatabind = DataBindingUtil.setContentView(this, layoutId())
-        mDatabind.lifecycleOwner = this
+    override fun initDataBind(): View {
+        bind = inflateBinding()
+        return bind.root
     }
 }

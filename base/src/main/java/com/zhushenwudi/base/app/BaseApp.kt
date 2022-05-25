@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
@@ -59,61 +60,62 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
     }
 
     override fun attachBaseContext(base: Context?) {
+        Log.e("aaa","attachBaseContext")
         super.attachBaseContext(base)
-
-        if (bridge.crashHandler == Handle.XCRASH) {
-            val callback = ICrashCallback { logPath, emergency ->
-                val map = TombstoneParser.parse(logPath, emergency)
-                val sb = StringBuilder()
-                val mode = if (bridge.isDebug) "Debug" else "Release"
-                sb.append("★ 项目名: ${AppUtils.getAppName()} (${mode}) ★\n")
-                bridge.versionName?.run { sb.append("★ 版本号: ${bridge.versionName} ★\n") }
-                bridge.serialNo?.run { sb.append("★ 设备号: ${bridge.serialNo} ★\n") }
-                sb.append("★ 时间: ${DateUtils.getDateFormatString(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss")} ★\n")
-                sb.append("★ 异常信息 ★\n")
-                sb.append(map["java stacktrace"] ?: "")
-                TombstoneManager.deleteTombstone(logPath)
-                if (onlineMode) {
-                    bridge.dingTalk?.run { sendDingTalk(sb.toString(), this) }
-                    bridge.mail?.run { sendMail(sb.toString(), this) }
-                }
-                XLog.e(sb.toString())
-                Thread.sleep(1000)
-                restartApplication()
-            }
-
-            XCrash.init(
-                this, XCrash.InitParameters()
-                    .setJavaRethrow(false)
-                    .setJavaDumpAllThreadsWhiteList(arrayOf("^main$", "^Binder:.*", ".*Finalizer.*"))
-                    .setJavaDumpAllThreadsCountMax(10)
-                    .setJavaCallback(callback)
-                    .setNativeRethrow(false)
-                    .setNativeLogCountMax(10)
-                    .setNativeDumpAllThreadsWhiteList(
-                        arrayOf(
-                            "^xcrash\\.sample$",
-                            "^Signal Catcher$",
-                            "^Jit thread pool$",
-                            ".*(R|r)ender.*",
-                            ".*Chrome.*"
-                        )
-                    )
-                    .setNativeDumpAllThreadsCountMax(10)
-                    .setNativeCallback(callback)
-                    .setAnrRethrow(false)
-                    .setAnrLogCountMax(10)
-                    .setAnrCallback(callback)
-                    .setPlaceholderCountMax(3)
-                    .setPlaceholderSizeKb(512)
-                    .setLogDir(getExternalFilesDir("xcrash").toString())
-                    .setLogFileMaintainDelayMs(1000)
-            )
-        }
+//        if (bridge.crashHandler == Handle.XCRASH) {
+//            val callback = ICrashCallback { logPath, emergency ->
+//                val map = TombstoneParser.parse(logPath, emergency)
+//                val sb = StringBuilder()
+//                val mode = if (bridge.isDebug) "Debug" else "Release"
+//                sb.append("★ 项目名: ${AppUtils.getAppName()} (${mode}) ★\n")
+//                bridge.versionName?.run { sb.append("★ 版本号: ${bridge.versionName} ★\n") }
+//                bridge.serialNo?.run { sb.append("★ 设备号: ${bridge.serialNo} ★\n") }
+//                sb.append("★ 时间: ${DateUtils.getDateFormatString(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss")} ★\n")
+//                sb.append("★ 异常信息 ★\n")
+//                sb.append(map["java stacktrace"] ?: "")
+//                TombstoneManager.deleteTombstone(logPath)
+//                if (onlineMode) {
+//                    bridge.dingTalk?.run { sendDingTalk(sb.toString(), this) }
+//                    bridge.mail?.run { sendMail(sb.toString(), this) }
+//                }
+//                XLog.e(sb.toString())
+//                Thread.sleep(1000)
+//                restartApplication()
+//            }
+//
+//            XCrash.init(
+//                this, XCrash.InitParameters()
+//                    .setJavaRethrow(false)
+//                    .setJavaDumpAllThreadsWhiteList(arrayOf("^main$", "^Binder:.*", ".*Finalizer.*"))
+//                    .setJavaDumpAllThreadsCountMax(10)
+//                    .setJavaCallback(callback)
+//                    .setNativeRethrow(false)
+//                    .setNativeLogCountMax(10)
+//                    .setNativeDumpAllThreadsWhiteList(
+//                        arrayOf(
+//                            "^xcrash\\.sample$",
+//                            "^Signal Catcher$",
+//                            "^Jit thread pool$",
+//                            ".*(R|r)ender.*",
+//                            ".*Chrome.*"
+//                        )
+//                    )
+//                    .setNativeDumpAllThreadsCountMax(10)
+//                    .setNativeCallback(callback)
+//                    .setAnrRethrow(false)
+//                    .setAnrLogCountMax(10)
+//                    .setAnrCallback(callback)
+//                    .setPlaceholderCountMax(3)
+//                    .setPlaceholderSizeKb(512)
+//                    .setLogDir(getExternalFilesDir("xcrash").toString())
+//                    .setLogFileMaintainDelayMs(1000)
+//            )
+//        }
     }
 
     override fun onCreate() {
         super.onCreate()
+        Log.e("aaa","onCreate")
         instance = this
         // 校验 apk 文件
         OpensslUtil.verify(this)
@@ -140,7 +142,7 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
         LogPrintUtils.setPrintLog(bridge.isDebug)
         AutoSizeConfig.getInstance().setLog(bridge.isDebug)
         Aria.init(this)
-        initLogger()
+//        initLogger()
     }
 
     private fun initLogger() {
