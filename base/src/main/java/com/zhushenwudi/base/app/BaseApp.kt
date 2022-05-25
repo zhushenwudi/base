@@ -118,7 +118,7 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
         Log.e("aaa","onCreate")
         instance = this
         // 校验 apk 文件
-        OpensslUtil.verify(this)
+//        OpensslUtil.verify(this)
 
         mAppViewModelStore = ViewModelStore()
         SpUtils.initMMKV(this)
