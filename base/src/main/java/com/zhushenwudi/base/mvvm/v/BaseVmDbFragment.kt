@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewbinding.ViewBinding
-import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
+import androidx.databinding.ViewDataBinding
 import com.zhushenwudi.base.ext.inflateBinding
+import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 
 /**
  * 作者　: hegaojian
@@ -14,7 +14,8 @@ import com.zhushenwudi.base.ext.inflateBinding
  * 描述　: ViewModelFragment基类，自动把ViewModel注入Fragment和Databind注入进来了
  * 需要使用Databind的清继承它
  */
-abstract class BaseVmDbFragment<VM : BaseAppViewModel, DB : ViewBinding> : BaseVmFragment<VM>() {
+abstract class BaseVmDbFragment<VM : BaseAppViewModel, DB : ViewDataBinding> :
+    BaseVmFragment<VM>() {
 
     //该类绑定的ViewDataBinding
     private var _binding: DB? = null
@@ -31,6 +32,7 @@ abstract class BaseVmDbFragment<VM : BaseAppViewModel, DB : ViewBinding> : BaseV
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bind.unbind()
         _binding = null
     }
 }

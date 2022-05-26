@@ -5,7 +5,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 
-class MyLinearLayoutManager(context: Context?, @RecyclerView.Orientation orientation: Int = RecyclerView.VERTICAL) : LinearLayoutManager(context) {
+class MyLinearLayoutManager(
+    context: Context?,
+    @RecyclerView.Orientation orientation: Int = RecyclerView.VERTICAL
+) : LinearLayoutManager(context) {
 
     init {
         setOrientation(orientation)

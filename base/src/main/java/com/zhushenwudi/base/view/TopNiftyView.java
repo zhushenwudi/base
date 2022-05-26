@@ -18,12 +18,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+
 import com.zhushenwudi.base.R;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -274,8 +277,8 @@ public class TopNiftyView {
         private TextView mMessageView;
         private TextView mActionView;
         private ImageView mImageView;
-        private int mMaxWidth;
-        private int mMaxInlineActionWidth;
+        private final int mMaxWidth;
+        private final int mMaxInlineActionWidth;
         private TopNiftyView.SnackbarLayout.OnLayoutChangeListener mOnLayoutChangeListener;
 
         public SnackbarLayout(Context context) {

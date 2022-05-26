@@ -3,6 +3,7 @@ package com.zhushenwudi.base.view;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
 import java.lang.ref.WeakReference;
 
 class TopNiftyViewManager {

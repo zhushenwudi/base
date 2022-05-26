@@ -1,7 +1,6 @@
 package com.zhushenwudi.base.utils
 
 import android.text.TextUtils
-import java.lang.StringBuilder
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -34,7 +33,7 @@ class EncodeUtil {
                 when (num) {
                     0 -> {
                         currentByte = (from[i].toInt() and lead6byte.code).toChar()
-                        currentByte = (currentByte.toInt() ushr 2).toChar()
+                        currentByte = (currentByte.code ushr 2).toChar()
                     }
                     2 -> currentByte = (from[i].toInt() and last6byte.code).toChar()
                     4 -> {
@@ -47,16 +46,16 @@ class EncodeUtil {
                     }
                     6 -> {
                         currentByte = (from[i].toInt() and last2byte.code).toChar()
-                        currentByte = (currentByte.toInt() shl 4).toChar()
+                        currentByte = (currentByte.code shl 4).toChar()
                         if (i + 1 < from.size) {
                             currentByte =
-                                (currentByte.toInt() or (from[i + 1].toInt() and lead4byte.code ushr 4)).toChar()
+                                (currentByte.code or (from[i + 1].toInt() and lead4byte.code ushr 4)).toChar()
                         }
                     }
                     else -> {
                     }
                 }
-                to.append(encodeTable.get(currentByte.toInt()))
+                to.append(encodeTable.get(currentByte.code))
                 num += 6
             }
         }

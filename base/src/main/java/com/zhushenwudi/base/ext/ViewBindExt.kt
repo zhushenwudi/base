@@ -12,7 +12,7 @@ import java.lang.reflect.ParameterizedType
 /**
  * 作者　: hegaojian
  * 时间　: 2021/12/21
- * 描述　: ViewBinding DataBinding 反射
+ * 描述　: DataBinding 反射
  */
 
 @JvmName("inflateBinding")
@@ -26,9 +26,18 @@ fun <VB : ViewBinding> AppCompatActivity.inflateBinding(): VB =
     }
 
 @JvmName("inflateBinding")
-fun <VB : ViewBinding> Fragment.inflateBinding(layoutInflater: LayoutInflater, parent: ViewGroup?, attachToParent: Boolean): VB =
+fun <VB : ViewBinding> Fragment.inflateBinding(
+    layoutInflater: LayoutInflater,
+    parent: ViewGroup?,
+    attachToParent: Boolean
+): VB =
     bindingClass<VB>(this) { clazz ->
-        clazz.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        clazz.getMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.java
+        )
             .invoke(null, layoutInflater, parent, attachToParent) as VB
     }.also { binding ->
         if (binding is ViewDataBinding) {

@@ -1,12 +1,7 @@
 package com.zhushenwudi.base.mvvm.vm
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.zhushenwudi.base.livedata.event.EventLiveData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 
 /**
  * 作者　: hegaojian

@@ -46,11 +46,13 @@ object SpUtils {
 
     fun putInt(key: String, value: Int): Boolean? = MMKV.defaultMMKV()?.encode(key, value)
 
-    fun getInt(key: String, defValue: Int = 0): Int = MMKV.defaultMMKV()?.decodeInt(key, defValue) ?: defValue
+    fun getInt(key: String, defValue: Int = 0): Int =
+        MMKV.defaultMMKV()?.decodeInt(key, defValue) ?: defValue
 
     fun putLong(key: String, value: Long): Boolean? = MMKV.defaultMMKV()?.encode(key, value)
 
-    fun getLong(key: String, defValue: Long = 0L): Long = MMKV.defaultMMKV()?.decodeLong(key, defValue) ?: defValue
+    fun getLong(key: String, defValue: Long = 0L): Long =
+        MMKV.defaultMMKV()?.decodeLong(key, defValue) ?: defValue
 
     fun putDouble(key: String, value: Double): Boolean? = MMKV.defaultMMKV()?.encode(key, value)
 

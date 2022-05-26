@@ -16,6 +16,7 @@ class KtxLifeCycleCallBack : Application.ActivityLifecycleCallbacks {
         KtxActivityManger.pushActivity(activity)
         "onActivityCreated : ${activity.localClassName}".logd()
     }
+
     override fun onActivityStarted(activity: Activity) {
         "onActivityStarted : ${activity.localClassName}".logd()
     }

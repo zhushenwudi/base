@@ -6,8 +6,8 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.zhushenwudi.base.R
-import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 import com.zhushenwudi.base.ext.getVmClazz
+import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 import com.zhushenwudi.base.network.manager.NetState
 import com.zhushenwudi.base.network.manager.NetworkStateManager
 
@@ -19,8 +19,6 @@ import com.zhushenwudi.base.network.manager.NetworkStateManager
 abstract class BaseVmActivity<VM : BaseAppViewModel> : AppCompatActivity() {
 
     lateinit var mViewModel: VM
-
-    abstract fun layoutId(): Int
 
     abstract fun initView(savedInstanceState: Bundle?)
 

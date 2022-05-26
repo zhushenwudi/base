@@ -1,11 +1,8 @@
 package com.zhushenwudi.base.login
 
 import com.alley.openssl.OpensslUtil.getEncodeKey
-import kotlin.Throws
 import com.zhushenwudi.base.login.codec.binary.Base64
 import java.io.UnsupportedEncodingException
-import java.lang.Exception
-import java.lang.StringBuilder
 import java.net.URLEncoder
 
 object LoginUtil {

@@ -18,9 +18,9 @@
 package com.zhushenwudi.base.login.codec.binary;
 
 import com.zhushenwudi.base.login.codec.BinaryDecoder;
+import com.zhushenwudi.base.login.codec.BinaryEncoder;
 import com.zhushenwudi.base.login.codec.DecoderException;
 import com.zhushenwudi.base.login.codec.EncoderException;
-import com.zhushenwudi.base.login.codec.BinaryEncoder;
 
 /**
  * Converts between byte arrays and strings of "0"s and "1"s.

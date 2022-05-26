@@ -6,7 +6,6 @@ import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion
 import com.zhushenwudi.base.network.interceptor.logging.LogInterceptor.Companion.isXml
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.jsonFormat
 import com.zhushenwudi.base.utils.CharacterHandler.Companion.xmlFormat
-import dev.utils.common.encrypt.MD5Utils
 import dev.utils.common.encrypt.MD5Utils.md5
 import okhttp3.MediaType
 import okhttp3.Request

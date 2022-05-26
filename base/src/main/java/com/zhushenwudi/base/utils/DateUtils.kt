@@ -188,7 +188,8 @@ object DateUtils {
 /**
  * 时间戳转格式化字符串
  */
-fun timestamp2str(ts: Long, df: String = "yyyy-MM-dd HH:mm:ss") = DateUtils.getDateFormatString(ts, df)
+fun timestamp2str(ts: Long, df: String = "yyyy-MM-dd HH:mm:ss") =
+    DateUtils.getDateFormatString(ts, df)
 
 /**
  * 格式化字符串转日期

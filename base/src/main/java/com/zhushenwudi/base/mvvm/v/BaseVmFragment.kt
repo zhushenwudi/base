@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 import com.zhushenwudi.base.ext.getVmClazz
+import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 import com.zhushenwudi.base.network.manager.NetState
 
 /**
@@ -71,11 +71,6 @@ abstract class BaseVmFragment<VM : BaseAppViewModel> : Fragment() {
      * 初始化view
      */
     abstract fun initView(savedInstanceState: Bundle?)
-
-    /**
-     * 懒加载
-     */
-    abstract fun lazyLoadData()
 
     /**
      * 创建观察者

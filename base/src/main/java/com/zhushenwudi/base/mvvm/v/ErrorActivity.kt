@@ -15,7 +15,7 @@ import com.zhushenwudi.base.utils.SendUtil.sendDingTalk
 import com.zhushenwudi.base.utils.SendUtil.sendMail
 import dev.utils.app.AppUtils
 
-class ErrorActivity: AppCompatActivity() {
+class ErrorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crash)
@@ -44,7 +44,14 @@ class ErrorActivity: AppCompatActivity() {
                 sb.append("★ 项目名: ${AppUtils.getAppName()} (${mode}) ★\n")
                 versionName?.run { sb.append("★ 版本号: $versionName ★\n") }
                 serialNo?.run { sb.append("★ 设备号: $serialNo ★\n") }
-                sb.append("★ 时间: ${DateUtils.getDateFormatString(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss")} ★\n")
+                sb.append(
+                    "★ 时间: ${
+                        DateUtils.getDateFormatString(
+                            System.currentTimeMillis(),
+                            "yyyy-MM-dd HH:mm:ss"
+                        )
+                    } ★\n"
+                )
                 sb.append("★ 异常信息 ★\n")
                 sb.append(it)
                 val message = sb.toString()

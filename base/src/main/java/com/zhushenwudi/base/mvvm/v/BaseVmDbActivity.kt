@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import com.noober.background.BackgroundLibrary
-import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 import com.zhushenwudi.base.ext.inflateBinding
+import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
 
 /**
  * 作者　: hegaojian
@@ -13,11 +13,10 @@ import com.zhushenwudi.base.ext.inflateBinding
  * 描述　: 包含ViewModel 和Databind ViewModelActivity基类，把ViewModel 和Databind注入进来了
  * 需要使用Databind的清继承它
  */
-abstract class BaseVmDbActivity<VM : BaseAppViewModel, DB : ViewDataBinding> : BaseVmActivity<VM>() {
+abstract class BaseVmDbActivity<VM : BaseAppViewModel, DB : ViewDataBinding> :
+    BaseVmActivity<VM>() {
 
     lateinit var bind: DB
-
-    override fun layoutId() = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         BackgroundLibrary.inject2(this)

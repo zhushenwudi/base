@@ -18,10 +18,10 @@
 package com.zhushenwudi.base.login.codec.binary;
 
 import com.zhushenwudi.base.login.codec.BinaryDecoder;
-import com.zhushenwudi.base.login.codec.DecoderException;
-import com.zhushenwudi.base.login.codec.EncoderException;
 import com.zhushenwudi.base.login.codec.BinaryEncoder;
 import com.zhushenwudi.base.login.codec.CharEncoding;
+import com.zhushenwudi.base.login.codec.DecoderException;
+import com.zhushenwudi.base.login.codec.EncoderException;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;

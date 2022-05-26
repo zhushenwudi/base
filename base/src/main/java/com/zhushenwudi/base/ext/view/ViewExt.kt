@@ -262,9 +262,12 @@ fun ImageView.showRoundPic(
 
 @RequiresApi(Build.VERSION_CODES.M)
 fun View.resource(resource: Int) = context.getColor(resource)
+
 @RequiresApi(Build.VERSION_CODES.M)
 fun Context.resource(resource: Int) = getColor(resource)
+
 @RequiresApi(Build.VERSION_CODES.M)
 fun Activity.resource(resource: Int) = getColor(resource)
+
 @RequiresApi(Build.VERSION_CODES.M)
 fun Fragment.resource(resource: Int) = this.requireContext().getColor(resource)
