@@ -20,21 +20,21 @@ import com.zhushenwudi.base.network.manager.NetState
 
 abstract class BaseVmFragment<VM : BaseAppViewModel> : Fragment() {
 
+    private var dataBindView : View? = null
+
     lateinit var mViewModel: VM
 
     lateinit var mActivity: AppCompatActivity
-
-    /**
-     * 当前Fragment绑定的视图布局
-     */
-    abstract fun layoutId(): Int
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(layoutId(), container, false)
+        dataBindView = initViewDataBind(inflater, container)
+        dataBindView?.run {
+            return rootView
+        } ?: throw RuntimeException("没有找到ViewBinding泛型")
     }
 
     override fun onAttach(context: Context) {
@@ -96,5 +96,12 @@ abstract class BaseVmFragment<VM : BaseAppViewModel> : Fragment() {
         mViewModel.loadingChange.dismissDialog.observe(viewLifecycleOwner) {
             dismissLoading()
         }
+    }
+
+    /**
+     * 供子类BaseVmDbActivity 初始化 DataBinding 操作
+     */
+    open fun initViewDataBind(inflater: LayoutInflater, container: ViewGroup?): View? {
+        return null
     }
 }

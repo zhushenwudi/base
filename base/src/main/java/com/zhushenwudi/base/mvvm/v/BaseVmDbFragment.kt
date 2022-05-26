@@ -1,6 +1,5 @@
 package com.zhushenwudi.base.mvvm.v
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,18 +13,14 @@ import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
  * 描述　: ViewModelFragment基类，自动把ViewModel注入Fragment和Databind注入进来了
  * 需要使用Databind的清继承它
  */
-abstract class BaseVmDbFragment<VM : BaseAppViewModel, DB : ViewDataBinding> :
+abstract class BaseVmDbFragment<VM : BaseAppViewModel, VB : ViewDataBinding> :
     BaseVmFragment<VM>() {
 
     //该类绑定的ViewDataBinding
-    private var _binding: DB? = null
+    private var _binding: VB? = null
     val bind get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun initViewDataBind(inflater: LayoutInflater, container: ViewGroup?): View? {
         _binding = inflateBinding(inflater, container, false)
         return bind.root
     }

@@ -13,10 +13,10 @@ import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
  * 描述　: 包含ViewModel 和Databind ViewModelActivity基类，把ViewModel 和Databind注入进来了
  * 需要使用Databind的清继承它
  */
-abstract class BaseVmDbActivity<VM : BaseAppViewModel, DB : ViewDataBinding> :
+abstract class BaseVmDbActivity<VM : BaseAppViewModel, VB : ViewDataBinding> :
     BaseVmActivity<VM>() {
 
-    lateinit var bind: DB
+    lateinit var bind: VB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         BackgroundLibrary.inject2(this)
