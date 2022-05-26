@@ -3,10 +3,9 @@ package com.zhushenwudi.base.mvvm.v
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.ViewDataBinding
-import androidx.viewbinding.ViewBinding
 import com.noober.background.BackgroundLibrary
 import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
-import com.zhushenwudi.base.utils.inflateBinding
+import com.zhushenwudi.base.ext.inflateBinding
 
 /**
  * 作者　: hegaojian

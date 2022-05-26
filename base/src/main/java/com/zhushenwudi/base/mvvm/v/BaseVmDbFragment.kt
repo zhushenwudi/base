@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.viewbinding.ViewBinding
 import com.zhushenwudi.base.mvvm.vm.BaseAppViewModel
-import com.zhushenwudi.base.utils.inflateBinding
+import com.zhushenwudi.base.ext.inflateBinding
 
 /**
  * 作者　: hegaojian
