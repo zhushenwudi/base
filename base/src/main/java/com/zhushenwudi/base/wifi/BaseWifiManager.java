@@ -99,7 +99,10 @@ public abstract class BaseWifiManager implements IWifiManager {
 
     @Override
     public void destroy() {
-        context.unregisterReceiver(wifiReceiver);
+        try {
+            context.unregisterReceiver(wifiReceiver);
+        } catch (Exception ignored) {
+        }
         handler.removeCallbacksAndMessages(null);
         manager = null;
         wifis = null;
