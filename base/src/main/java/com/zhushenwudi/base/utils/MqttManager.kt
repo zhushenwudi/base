@@ -64,8 +64,12 @@ object MqttManager {
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    callback(false)
-                    exception?.printStackTrace()
+                    if (exception.toString().contains("已连接客户机")) {
+                        callback(true)
+                    } else {
+                        callback(false)
+                        exception?.printStackTrace()
+                    }
                 }
             })
         } catch (e: MqttException) {
