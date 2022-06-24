@@ -1,11 +1,10 @@
 package com.zhushenwudi.base.wifi;
 
+import android.annotation.SuppressLint;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class WifiHelper {
@@ -14,27 +13,36 @@ public class WifiHelper {
     public static final String EAP = "EAP";
     public static final String WPA = "WPA";
 
-
+    @SuppressLint("MissingPermission")
     public static int configOrCreateWifi(WifiManager manager, IWifi wifi, String password) {
-        List<WifiConfiguration> configurations = manager.getConfiguredNetworks();
-        for (WifiConfiguration configuration : configurations) {
-            if (configuration.SSID.equals(wifi.SSID()))
-                return configuration.networkId;
+        try {
+            List<WifiConfiguration> configurations = manager.getConfiguredNetworks();
+            for (WifiConfiguration configuration : configurations) {
+                if (configuration.SSID.equals(wifi.SSID()))
+                    return configuration.networkId;
+            }
+            WifiConfiguration configuration = createWifiConfiguration(wifi, password);
+            return saveWifiConfiguration(manager, configuration);
+        } catch (Exception e) {
+            return -1;
         }
-        WifiConfiguration configuration = createWifiConfiguration(wifi, password);
-        return saveWifiConfiguration(manager, configuration);
     }
 
+    @SuppressLint("MissingPermission")
     public static boolean deleteWifiConfiguration(WifiManager manager, IWifi wifi) {
-        List<WifiConfiguration> configurations = manager.getConfiguredNetworks();
-        for (WifiConfiguration configuration : configurations) {
-            if (configuration.SSID.equals(wifi.SSID())) {
-                boolean ret = manager.removeNetwork(configuration.networkId);
-                ret = ret & manager.saveConfiguration();
-                return ret;
+        try {
+            List<WifiConfiguration> configurations = manager.getConfiguredNetworks();
+            for (WifiConfiguration configuration : configurations) {
+                if (configuration.SSID.equals(wifi.SSID())) {
+                    boolean ret = manager.removeNetwork(configuration.networkId);
+                    ret = ret & manager.saveConfiguration();
+                    return ret;
+                }
             }
+            return false;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
 
     private static WifiConfiguration createWifiConfiguration(IWifi wifi, String password) {
@@ -105,12 +113,8 @@ public class WifiHelper {
     }
 
     public static List<IWifi> removeDuplicate(List<IWifi> list) {
-        Collections.sort(list, new Comparator<IWifi>() {
-            @Override
-            public int compare(IWifi l, IWifi r) {
-                return r.level() - l.level();
-            }
-        });
+        Collections.sort(list, (l, r) -> r.level() - l.level());
+
         List<IWifi> set = new ArrayList<>();
         for (IWifi wifi : list) {
             if (!set.contains(wifi)) {

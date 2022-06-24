@@ -124,7 +124,7 @@ dependencies {
     // 通过标签直接生成shape  https://github.com/JavaNoober/BackgroundLibrary/wiki/3%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
     api 'com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.2'
     // sentry 崩溃收集
-    api 'io.sentry:sentry-android:5.7.0'
+    api 'io.sentry:sentry-android:6.1.2'
     // 自定义下拉弹窗封装
     api 'com.github.zhushenwudi:materialspinner:1.1'
     // 版本号比对
