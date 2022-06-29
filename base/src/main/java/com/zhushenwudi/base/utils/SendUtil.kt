@@ -23,6 +23,7 @@ object SendUtil {
     private const val SERVER_HOST = "smtp.qq.com"
     private const val SERVER_PORT = "587"
     private const val CRASH_TITLE = " Crash Found!!"
+    private const val MAX_LENGTH = 1800
 
     fun sendMail(message: String, mailBean: MailBean) {
         try {
@@ -42,26 +43,46 @@ object SendUtil {
         }
     }
 
-    fun sendDingTalk(message: String, dingTalkBean: DingTalkBean) {
-        try {
-            val dingTalk = DingTalk(TextBean(message), AtBean(dingTalkBean.to))
-            val timestamp = System.currentTimeMillis()
-            val strToSign = "${timestamp}\n${dingTalkBean.secret}"
-            val mac = Mac.getInstance(SHA256)
-            mac.init(SecretKeySpec(dingTalkBean.secret.toByteArray(StandardCharsets.UTF_8), SHA256))
-            val signData = mac.doFinal(strToSign.toByteArray(StandardCharsets.UTF_8))
-            val sign = URLEncoder.encode(EncodeUtil().encode(signData), ENCODER)
-            val url =
-                "${DING_TALK_URL}?access_token=${dingTalkBean.token}&sign=${sign}&timestamp=${timestamp}"
-            MainScope().launch(Dispatchers.IO) {
-                OkGo.post<String>(url)
-                    .tag(this)
-                    .headers(HEADER_KEY, HEADER_VALUE)
-                    .upJson(toJson(dingTalk))
-                    .execute()
+    fun sendDingTalk(_message: String, dingTalkBean: DingTalkBean) {
+        MainScope().launch(Dispatchers.IO) {
+            try {
+                var message = _message
+                if (message.length <= MAX_LENGTH) {
+                    send(message, dingTalkBean)
+                } else {
+                    val timestamp = System.currentTimeMillis()
+                    while (message.length > MAX_LENGTH) {
+                        val logContent = message.substring(0, MAX_LENGTH)
+                        message = message.replace(logContent, "")
+                        send(
+                            message = "Tag: $timestamp\n$logContent",
+                            dingTalkBean = dingTalkBean
+                        )
+                    }
+                    send(
+                        message = "Tag: $timestamp\n$message",
+                        dingTalkBean = dingTalkBean
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
+    }
+
+    private fun send(message: String, dingTalkBean: DingTalkBean) {
+        val dingTalk = DingTalk(TextBean(message), AtBean(dingTalkBean.to))
+        val timestamp = System.currentTimeMillis()
+        val strToSign = "${timestamp}\n${dingTalkBean.secret}"
+        val mac = Mac.getInstance(SHA256)
+        mac.init(SecretKeySpec(dingTalkBean.secret.toByteArray(StandardCharsets.UTF_8), SHA256))
+        val signData = mac.doFinal(strToSign.toByteArray(StandardCharsets.UTF_8))
+        val sign = URLEncoder.encode(EncodeUtil().encode(signData), ENCODER)
+        val url = "${DING_TALK_URL}?access_token=${dingTalkBean.token}&sign=${sign}&timestamp=${timestamp}"
+        OkGo.post<String>(url)
+            .tag(this)
+            .headers(HEADER_KEY, HEADER_VALUE)
+            .upJson(toJson(dingTalk))
+            .execute()
     }
 }
