@@ -49,7 +49,7 @@ noArg {
 
 dependencies {
     // 基础 UI
-    api 'androidx.appcompat:appcompat:1.4.1'
+    api 'androidx.appcompat:appcompat:1.4.2'
     api 'androidx.constraintlayout:constraintlayout:2.1.3'
     api "androidx.recyclerview:recyclerview:1.2.1"
     // kotlin
@@ -83,7 +83,7 @@ dependencies {
     // gson
     api 'com.google.code.gson:gson:2.8.9'
     // android 工具类
-    api "io.github.afkt:DevAppX:2.3.6"
+    api "io.github.afkt:DevAppX:2.3.9"
     // 权限请求
     api 'com.ftd.livepermissions:livepermissions:1.0.2'
     // 下载（断点续传、多线程下载合并）
@@ -124,13 +124,13 @@ dependencies {
     // 通过标签直接生成shape  https://github.com/JavaNoober/BackgroundLibrary/wiki/3%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
     api 'com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.2'
     // sentry 崩溃收集
-    api 'io.sentry:sentry-android:6.1.2'
+    api 'io.sentry:sentry-android:6.1.4'
     // 自定义下拉弹窗封装
     api 'com.github.zhushenwudi:materialspinner:1.1'
     // 版本号比对
     api 'io.github.g00fy2:versioncompare:1.5.0'
     // recycler adapter (修复原作者多级折叠菜单的bug)
-    api 'com.github.zhushenwudi:LibAdapter:1.1'
+    api 'com.github.zhushenwudi:LibAdapter:1.2'
     // 爱奇艺崩溃拦截
     api 'com.iqiyi.xcrash:xcrash-android-lib:3.0.0'
     // usb串口
