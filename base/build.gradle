@@ -81,9 +81,9 @@ dependencies {
     // lottie 动画
     api 'com.airbnb.android:lottie:5.0.3'
     // gson
-    api 'com.google.code.gson:gson:2.8.9'
+    api 'com.google.code.gson:gson:2.9.0'
     // android 工具类
-    api "io.github.afkt:DevAppX:2.3.9"
+    api "io.github.afkt:DevAppX:2.4.0"
     // 权限请求
     api 'com.ftd.livepermissions:livepermissions:1.0.2'
     // 下载（断点续传、多线程下载合并）
@@ -124,7 +124,7 @@ dependencies {
     // 通过标签直接生成shape  https://github.com/JavaNoober/BackgroundLibrary/wiki/3%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
     api 'com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.2'
     // sentry 崩溃收集
-    api 'io.sentry:sentry-android:6.1.4'
+    api 'io.sentry:sentry-android:6.3.0'
     // 自定义下拉弹窗封装
     api 'com.github.zhushenwudi:materialspinner:1.1'
     // 版本号比对

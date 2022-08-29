@@ -217,23 +217,23 @@ fun <T, BD : ViewDataBinding> BaseQuickAdapter<T, BaseDataBindingHolder<BD>>.loa
     return page
 }
 
-fun ImageView.showPic(
+fun ImageView.showRectPic(
     pic: String?,
     defPhoto: Int = R.drawable.icon_def,
-    sideWidth: Int = 64
+    width: Int = 64,
+    height: Int = 64
 ) {
     if (pic.isNullOrEmpty()) {
         load(defPhoto) {
             crossfade(false)
-            size(sideWidth, sideWidth)
+            size(width, height)
         }
     } else {
         load(pic) {
             crossfade(false)
             placeholder(defPhoto)
             error(defPhoto)
-            size(sideWidth, sideWidth)
-            transformations(CircleCropTransformation())
+            size(width, height)
         }
     }
 }
