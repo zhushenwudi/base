@@ -4,6 +4,15 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-noarg'
     id 'kotlin-kapt'
+    id 'maven'
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
 }
 
 android {
@@ -40,6 +49,26 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    uploadArchives {
+        configuration = configurations.archives
+        repositories {
+            mavenDeployer {
+                def username = localProperties.getProperty("nexusName")
+                def password = localProperties.getProperty("nexusPwd")
+                repository(url: 'https://nexus3.devops.intelab.cloud/repository/android-maven/') {
+                    authentication(userName: username, password: password)
+                }
+                pom.project {
+                    version '1.0.0'
+                    artifactId 'base'
+                    groupId 'com.ilab.android'
+                    packaging 'aar'
+                    description 'init'
+                }
+            }
+        }
     }
 }
 
@@ -124,7 +153,7 @@ dependencies {
     // 通过标签直接生成shape  https://github.com/JavaNoober/BackgroundLibrary/wiki/3%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B
     api 'com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.2'
     // sentry 崩溃收集
-    api 'io.sentry:sentry-android:6.3.0'
+    api 'io.sentry:sentry-android:6.3.1'
     // 自定义下拉弹窗封装
     api 'com.github.zhushenwudi:materialspinner:1.1'
     // 版本号比对
