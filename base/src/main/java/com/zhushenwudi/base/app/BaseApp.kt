@@ -127,8 +127,11 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        // 校验 apk 文件
-        OpensslUtil.verify(this)
+
+        if (bridge.needVerifySignature) {
+            // 校验 apk 文件
+            OpensslUtil.verify(this)
+        }
 
         mAppViewModelStore = ViewModelStore()
         SpUtils.initMMKV(this)

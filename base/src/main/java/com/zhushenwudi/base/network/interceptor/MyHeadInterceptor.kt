@@ -12,9 +12,9 @@ open class MyHeadInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        if (request.method() == "GET") {
+        if (request.method == "GET") {
             //添加GET 请求公共参数
-            val httpUrlBuilder = request.url().newBuilder()
+            val httpUrlBuilder = request.url.newBuilder()
             request = addCommonParameter(httpUrlBuilder, request)
         }
 

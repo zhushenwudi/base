@@ -14,7 +14,8 @@ data class Bridge(
     var versionName: String? = null,
     var serialNo: String? = null,
     var mail: MailBean? = null,
-    var dingTalk: DingTalkBean? = null
+    var dingTalk: DingTalkBean? = null,
+    var needVerifySignature: Boolean = true
 ) : Parcelable
 
 @Keep
