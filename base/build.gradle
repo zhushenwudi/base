@@ -61,7 +61,7 @@ android {
                     authentication(userName: username, password: password)
                 }
                 pom.project {
-                    version '1.0.1'
+                    version '1.0.3'
                     artifactId 'base'
                     groupId 'com.ilab.android'
                     packaging 'aar'
@@ -78,7 +78,7 @@ noArg {
 
 dependencies {
     // 基础 UI
-    api 'androidx.appcompat:appcompat:1.5.0'
+    api 'androidx.appcompat:appcompat:1.4.2'
     api 'androidx.constraintlayout:constraintlayout:2.1.4'
     api "androidx.recyclerview:recyclerview:1.2.1"
     // kotlin
@@ -124,10 +124,10 @@ dependencies {
     api 'com.bennyhuo.kotlin.apt:deepcopy-runtime:1.5.0'
     api 'com.bennyhuo.kotlin.apt:deepcopy-annotations:1.5.0'
     // 图片
-    api "io.coil-kt:coil:2.1.0"
-    api 'io.coil-kt:coil-gif:1.4.0'
-    api 'io.coil-kt:coil-svg:1.4.0'
-    api 'io.coil-kt:coil-video:1.4.0'
+    api "io.coil-kt:coil:2.2.1"
+    api 'io.coil-kt:coil-gif:2.2.1'
+    api 'io.coil-kt:coil-svg:2.2.1'
+    api 'io.coil-kt:coil-video:2.2.1'
     // 腾讯 键值对 存储
     api 'com.tencent:mmkv-static:1.2.10'
     // 高仿IOS switch button
