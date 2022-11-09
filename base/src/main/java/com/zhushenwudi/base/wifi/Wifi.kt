@@ -121,13 +121,12 @@ open class Wifi : IWifi {
             wifi.capabilities?.run {
                 val encryptType = uppercase(Locale.getDefault())
                 when {
-                    encryptType.contains("WPA2-PSK") && encryptType.contains("WPA-PSK") -> wifi.encryption =
-                        "WPA/WPA2"
+                    encryptType.contains("WPA2-PSK") && encryptType.contains("WPA-PSK") -> wifi.encryption = "WPA/WPA2"
                     encryptType.contains("WPA-PSK") -> wifi.encryption = "WPA"
                     encryptType.contains("WPA2-PSK") -> wifi.encryption = "WPA2"
                     else -> wifi.isEncrypt = false
                 }
-            }?.run { wifi.isEncrypt = false }
+            }?: run { wifi.isEncrypt = false }
 
             wifi.description = wifi.encryption
             for (configuration in configurations) {

@@ -6,14 +6,17 @@ import android.content.Intent
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.text.TextUtils
+import androidx.annotation.RequiresApi
 
 class WifiReceiver : BroadcastReceiver() {
 
     var iWifiReceiver: IWifiReceiver? = null
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context, intent: Intent) {
         // 监听wifi的打开与关闭，与wifi的连接无关
         val action = intent.action
@@ -42,7 +45,7 @@ class WifiReceiver : BroadcastReceiver() {
         if (WifiManager.NETWORK_STATE_CHANGED_ACTION == action) {
             val info = intent.getParcelableExtra<NetworkInfo>(WifiManager.EXTRA_NETWORK_INFO)
                 ?: return
-            val myState = info.state ?: return
+            info.state ?: return
             val wifiInfo: WifiInfo = iWifiReceiver?.receiverGetConnectionInfo() ?: return
             var SSID = wifiInfo.ssid
             if (TextUtils.isEmpty(SSID)) return
@@ -68,6 +71,7 @@ class WifiReceiver : BroadcastReceiver() {
         if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION == action) {
             val isUpdated = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
             if (isUpdated) iWifiReceiver?.receiverUpdateWifiList()
+
         }
     }
 

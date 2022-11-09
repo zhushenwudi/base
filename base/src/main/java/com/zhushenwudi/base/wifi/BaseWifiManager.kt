@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import com.zhushenwudi.base.wifi.*
 import com.zhushenwudi.base.wifi.Wifi.Companion.create
 import com.zhushenwudi.base.wifi.WifiHelper.removeDuplicate
 
@@ -81,6 +80,10 @@ abstract class BaseWifiManager(private val context: Context): IWifiManager,
     }
 
     override fun receiverSendEmptyMsg(what: Int) {
+        if (what == WifiState.WIFI_STATE_ENABLED) {
+            // 启用wifi后，延时5s再取列表
+            mHandler?.postDelayed({ receiverUpdateWifiList() }, 5000)
+        }
         mHandler?.sendEmptyMessage(what)
     }
 
@@ -173,9 +176,5 @@ abstract class BaseWifiManager(private val context: Context): IWifiManager,
         mHandler?.removeCallbacksAndMessages(null)
         mHandler = null
         manager = null
-    }
-
-    companion object {
-        const val TAG = "baseWifiManager"
     }
 }
