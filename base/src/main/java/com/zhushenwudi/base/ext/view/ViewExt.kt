@@ -140,7 +140,7 @@ fun View.clickNoRepeat(
                     BaseApp.instance.traceList.find { it.page == findNavController().currentDestination?.label }
                 map["pageName"] = info?.label ?: "-"
                 map["button"] = label
-                MobclickAgent.onEventObject(appContext, "", map)
+                MobclickAgent.onEventObject(appContext, "event", map)
             }
             action(it)
         }

@@ -266,16 +266,12 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
     }
 
     open fun initTracePointData() {
-        val asset = ResourceUtils.getAssets()
         val fileName = "page_trace_info.json"
-        val directory = asset.list(".")
-        if (directory?.any { it == fileName } == true) {
-            val json = readStringFromAssets(fileName)
-            if (json.isNullOrEmpty()) {
-                return
-            }
-            fromJson<MutableList<TracePageInfo>>(json)?.let { traceList.addAll(it) }
+        val json = readStringFromAssets(fileName)
+        if (json.isNullOrEmpty()) {
+            return
         }
+        fromJson<MutableList<TracePageInfo>>(json)?.let { traceList.addAll(it) }
     }
 
     companion object {
