@@ -12,12 +12,17 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseDataBindingHolder
+import com.umeng.analytics.MobclickAgent
 import com.zhushenwudi.base.R
+import com.zhushenwudi.base.app.BaseApp
+import com.zhushenwudi.base.app.appContext
+import com.zhushenwudi.base.utils.SpUtils
 import kotlin.math.abs
 
 // 最近一次点击的时间
@@ -116,15 +121,27 @@ fun createBitmapSafely(width: Int, height: Int, config: Bitmap.Config, retryCoun
 /**
  * @param interval 延时
  * @param withOthers 与其他控件同时判断快速点击，false计算自身控件的延时，true计算全部控件的延时
+ * @param label 埋点名称
  * @param action 动作
  */
 fun View.clickNoRepeat(
     interval: Long = 500,
     withOthers: Boolean = false,
+    label: String? = null,
     action: (view: View) -> Unit
 ) {
     setOnClickListener {
         if (!isFastDoubleClick(it, interval, withOthers)) {
+            if (label != null && BaseApp.instance.traceList.isNotEmpty()) {
+                val map = HashMap<String, Any>()
+                map["time"] = System.currentTimeMillis()
+                map["username"] = SpUtils.getString("username", "-")
+                val info =
+                    BaseApp.instance.traceList.find { it.page == findNavController().currentDestination?.label }
+                map["pageName"] = info?.label ?: "-"
+                map["button"] = label
+                MobclickAgent.onEventObject(appContext, "", map)
+            }
             action(it)
         }
     }

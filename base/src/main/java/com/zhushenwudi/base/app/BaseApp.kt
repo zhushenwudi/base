@@ -18,18 +18,27 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy2
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
+import com.jeremyliao.liveeventbus.LiveEventBus
+import com.umeng.commonsdk.UMConfigure
 import com.zhushenwudi.base.mvvm.m.Bridge
 import com.zhushenwudi.base.mvvm.m.Handle
+import com.zhushenwudi.base.mvvm.m.TracePageInfo
 import com.zhushenwudi.base.mvvm.v.ErrorActivity
 import com.zhushenwudi.base.utils.DateUtils
 import com.zhushenwudi.base.utils.SendUtil.sendDingTalk
 import com.zhushenwudi.base.utils.SendUtil.sendMail
 import com.zhushenwudi.base.utils.SpUtils
+import com.zhushenwudi.base.utils.fromJson
 import com.zhushenwudi.base.utils.restartApplication
 import dev.utils.LogPrintUtils
 import dev.utils.app.AppUtils
 import dev.utils.app.PathUtils
+import dev.utils.app.ResourceUtils
+import dev.utils.app.ResourceUtils.readStringFromAssets
 import dev.utils.common.FileUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import me.jessyan.autosize.AutoSizeConfig
 import xcrash.ICrashCallback
 import xcrash.TombstoneManager
@@ -51,6 +60,8 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
     private lateinit var mAppViewModelStore: ViewModelStore
 
     private var mFactory: ViewModelProvider.Factory? = null
+
+    val traceList = mutableListOf<TracePageInfo>()
 
     var onlineMode = false
 
@@ -139,6 +150,9 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
         // 是否是上报模式
         onlineMode = getAppMetaData(this, "online_mode")
 
+        // 埋点页面解析
+        initTracePointData()
+
         //防止项目崩溃，崩溃后打开错误界面
         CaocConfig.Builder.create()
             .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
@@ -154,8 +168,20 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
 
         LogPrintUtils.setPrintLog(bridge.isDebug)
         AutoSizeConfig.getInstance().setLog(bridge.isDebug)
+        LiveEventBus.config().enableLogger(bridge.isDebug)
         Aria.init(this)
         initLogger()
+
+        if (bridge.uMeng == null) {
+            return
+        }
+        MainScope().launch(Dispatchers.IO) {
+            UMConfigure.setLogEnabled(true)
+            val env = if (bridge.isDebug) "PRE" else "PROD"
+            UMConfigure.preInit(this@BaseApp, bridge.uMeng, env)
+            UMConfigure.submitPolicyGrantResult(this@BaseApp, true)
+            UMConfigure.init(this@BaseApp, bridge.uMeng, env, UMConfigure.DEVICE_TYPE_BOX, "")
+        }
     }
 
     private fun initLogger() {
@@ -236,6 +262,19 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
                 }
                 return "" as T
             }
+        }
+    }
+
+    open fun initTracePointData() {
+        val asset = ResourceUtils.getAssets()
+        val fileName = "page_trace_info.json"
+        val directory = asset.list(".")
+        if (directory?.any { it == fileName } == true) {
+            val json = readStringFromAssets(fileName)
+            if (json.isNullOrEmpty()) {
+                return
+            }
+            fromJson<MutableList<TracePageInfo>>(json)?.let { traceList.addAll(it) }
         }
     }
 
