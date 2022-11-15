@@ -137,22 +137,40 @@ fun View.clickNoRepeat(
 ) {
     setOnClickListener {
         if (!isFastDoubleClick(it, interval, withOthers)) {
-            if (label != null && BaseApp.instance.traceList.isNotEmpty()) {
-                val map = HashMap<String, Any>()
-                val sb = StringBuilder()
-                val info =
-                    BaseApp.instance.traceList.find { it.page == findNavController().currentDestination?.label }
-                sb.append("页面: ${info?.label ?: "-"}")
-                sb.append(" - ")
-                sb.append("按钮: $label")
-                sb.append(" - ")
-                sb.append("用户名: ${SpUtils.getString("username", "-")}")
-                sb.append(" - ")
-                sb.append("时间: ${sdf.format(Date())}")
-                map["params"] = sb.toString()
-                MobclickAgent.onEventObject(appContext, "event", map)
-            }
+            upReportTracePoint(label)
             action(it)
+        }
+    }
+}
+
+private fun View.upReportTracePoint(label: String?) {
+    if (label != null && BaseApp.instance.traceList.isNotEmpty()) {
+        val map = HashMap<String, Any>()
+        val sb = StringBuilder()
+        val info =
+            BaseApp.instance.traceList.find { it.page == findNavController().currentDestination?.label }
+        sb.append("页面: ${info?.label ?: "-"}")
+        sb.append(" - ")
+        sb.append("按钮: $label")
+        sb.append(" - ")
+        sb.append("用户名: ${SpUtils.getString("username", "-")}")
+        sb.append(" - ")
+        sb.append("时间: ${sdf.format(Date())}")
+        map["params"] = sb.toString()
+        MobclickAgent.onEventObject(appContext, "event", map)
+    }
+}
+
+fun BaseQuickAdapter<*, *>.clickNoRepeat(
+    interval: Long = 500,
+    withOthers: Boolean = false,
+    label: String? = null,
+    action: (adapter: BaseQuickAdapter<*, *>?, view: View, position: Int) -> Unit
+) {
+    setOnItemClickListener { adapter: BaseQuickAdapter<*, *>?, view: View, position: Int ->
+        if (!isFastDoubleClick(view, interval, withOthers)) {
+            view.upReportTracePoint(label)
+            action(adapter, view, position)
         }
     }
 }
