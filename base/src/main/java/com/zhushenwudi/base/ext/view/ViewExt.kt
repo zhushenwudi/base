@@ -23,6 +23,9 @@ import com.zhushenwudi.base.R
 import com.zhushenwudi.base.app.BaseApp
 import com.zhushenwudi.base.app.appContext
 import com.zhushenwudi.base.utils.SpUtils
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.abs
 
 // 最近一次点击的时间
@@ -30,6 +33,8 @@ private var mLastClickTime: Long = 0
 
 // 最近一次点击的控件ID
 private var mLastClickViewId = 0
+
+val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA) //设置日期格式
 
 /**
  * 设置view显示
@@ -134,12 +139,17 @@ fun View.clickNoRepeat(
         if (!isFastDoubleClick(it, interval, withOthers)) {
             if (label != null && BaseApp.instance.traceList.isNotEmpty()) {
                 val map = HashMap<String, Any>()
-                map["time"] = System.currentTimeMillis()
-                map["username"] = SpUtils.getString("username", "-")
+                val sb = StringBuilder()
                 val info =
                     BaseApp.instance.traceList.find { it.page == findNavController().currentDestination?.label }
-                map["pageName"] = info?.label ?: "-"
-                map["button"] = label
+                sb.append("页面: ${info?.label ?: "-"}")
+                sb.append(" - ")
+                sb.append("按钮: $label")
+                sb.append(" - ")
+                sb.append("用户名: ${SpUtils.getString("username", "-")}")
+                sb.append(" - ")
+                sb.append("时间: ${sdf.format(Date())}")
+                map["params"] = sb.toString()
                 MobclickAgent.onEventObject(appContext, "event", map)
             }
             action(it)
