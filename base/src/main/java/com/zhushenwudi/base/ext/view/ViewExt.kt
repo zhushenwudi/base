@@ -132,7 +132,7 @@ fun createBitmapSafely(width: Int, height: Int, config: Bitmap.Config, retryCoun
 fun View.clickNoRepeat(
     interval: Long = 500,
     withOthers: Boolean = false,
-    label: String? = null,
+    label: String = "",
     action: (view: View) -> Unit
 ) {
     setOnClickListener {
@@ -143,12 +143,14 @@ fun View.clickNoRepeat(
     }
 }
 
-private fun View.upReportTracePoint(label: String?) {
-    if (label != null && BaseApp.instance.traceList.isNotEmpty()) {
+fun View.upReportTracePoint(label: String, fragmentName: String? = null) {
+    if (label.isNotEmpty() && BaseApp.instance.traceList.isNotEmpty()) {
         val map = HashMap<String, Any>()
         val sb = StringBuilder()
         val info =
-            BaseApp.instance.traceList.find { it.page == findNavController().currentDestination?.label }
+            BaseApp.instance.traceList.find {
+                it.page == (fragmentName ?: findNavController().currentDestination?.label)
+            }
         sb.append("页面: ${info?.label ?: "-"}")
         sb.append(" - ")
         sb.append("按钮: $label")
@@ -162,16 +164,13 @@ private fun View.upReportTracePoint(label: String?) {
 }
 
 fun BaseQuickAdapter<*, *>.clickNoRepeat(
-    interval: Long = 500,
-    withOthers: Boolean = false,
-    label: String? = null,
+    vararg label: Pair<Int, String>?,
+    fragmentName: String?,
     action: (adapter: BaseQuickAdapter<*, *>?, view: View, position: Int) -> Unit
 ) {
-    setOnItemClickListener { adapter: BaseQuickAdapter<*, *>?, view: View, position: Int ->
-        if (!isFastDoubleClick(view, interval, withOthers)) {
-            view.upReportTracePoint(label)
-            action(adapter, view, position)
-        }
+    setOnItemClickListener { adapter, view, position ->
+        view.upReportTracePoint(label[position]?.second ?: "", fragmentName)
+        action(adapter, view, position)
     }
 }
 
