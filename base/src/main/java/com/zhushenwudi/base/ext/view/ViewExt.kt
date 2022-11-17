@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
@@ -25,9 +24,6 @@ import com.zhushenwudi.base.app.BaseApp
 import com.zhushenwudi.base.app.appContext
 import com.zhushenwudi.base.utils.SpUtils
 import dev.utils.LogPrintUtils
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.abs
 
 // 最近一次点击的时间
@@ -35,8 +31,6 @@ private var mLastClickTime: Long = 0
 
 // 最近一次点击的控件ID
 private var mLastClickViewId = 0
-
-val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA) //设置日期格式
 
 /**
  * 设置view显示
@@ -156,8 +150,9 @@ fun View.upReportTracePoint(label: String, fragmentName: String? = null) {
         sb.append(info?.label ?: "-")
         sb.append(" - ")
         sb.append(label)
-        LogPrintUtils.dTag("trace_point", sb.toString())
-        map[if (BaseApp.instance.bridge.isDebug) "dev" else "prod"] = sb.toString()
+        val env = SpUtils.getString("upReportEnv", "测试环境")
+        LogPrintUtils.dTag("trace_point_${if (env == "测试环境") "dev" else "prod"}", sb.toString())
+        map[env] = sb.toString()
         MobclickAgent.onEventObject(appContext, "event", map)
     }
 }

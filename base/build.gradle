@@ -61,7 +61,7 @@ android {
                     authentication(userName: username, password: password)
                 }
                 pom.project {
-                    version '1.0.6-pre13'
+                    version '1.0.6-pre14'
                     artifactId 'base'
                     groupId 'com.ilab.android'
                     packaging 'aar'
