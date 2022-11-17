@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
@@ -23,6 +24,7 @@ import com.zhushenwudi.base.R
 import com.zhushenwudi.base.app.BaseApp
 import com.zhushenwudi.base.app.appContext
 import com.zhushenwudi.base.utils.SpUtils
+import dev.utils.LogPrintUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -155,10 +157,11 @@ fun View.upReportTracePoint(label: String, fragmentName: String? = null) {
         sb.append(" - ")
         sb.append("按钮: $label")
         sb.append(" - ")
-        sb.append("用户名: ${SpUtils.getString("username", "-")}")
+        sb.append("用户名: ${SpUtils.getString("name", "-")}")
         sb.append(" - ")
         sb.append("时间: ${sdf.format(Date())}")
-        map["params"] = sb.toString()
+        LogPrintUtils.d(sb.toString())
+        map["params-${if (BaseApp.instance.bridge.isDebug) "dev" else "prod"}"] = sb.toString()
         MobclickAgent.onEventObject(appContext, "event", map)
     }
 }
