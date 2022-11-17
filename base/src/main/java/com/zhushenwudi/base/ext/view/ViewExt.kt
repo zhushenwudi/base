@@ -150,8 +150,8 @@ fun View.upReportTracePoint(label: String, fragmentName: String? = null) {
         sb.append(info?.label ?: "-")
         sb.append(" - ")
         sb.append(label)
-        val env = SpUtils.getString("upReportEnv", "测试环境")
-        LogPrintUtils.dTag("trace_point_${if (env == "测试环境") "dev" else "prod"}", sb.toString())
+        val env = SpUtils.getString("upReportEnv", "dev")
+        LogPrintUtils.dTag("trace_point_$env", sb.toString())
         map[env] = sb.toString()
         MobclickAgent.onEventObject(appContext, "event", map)
     }
