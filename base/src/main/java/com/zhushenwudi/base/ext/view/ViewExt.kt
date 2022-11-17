@@ -153,15 +153,11 @@ fun View.upReportTracePoint(label: String, fragmentName: String? = null) {
             BaseApp.instance.traceList.find {
                 it.page == (fragmentName ?: findNavController().currentDestination?.label)
             }
-        sb.append("页面: ${info?.label ?: "-"}")
+        sb.append(info?.label ?: "-")
         sb.append(" - ")
-        sb.append("按钮: $label")
-        sb.append(" - ")
-        sb.append("用户名: ${SpUtils.getString("name", "-")}")
-        sb.append(" - ")
-        sb.append("时间: ${sdf.format(Date())}")
-        LogPrintUtils.d(sb.toString())
-        map["params-${if (BaseApp.instance.bridge.isDebug) "dev" else "prod"}"] = sb.toString()
+        sb.append(label)
+        LogPrintUtils.dTag("trace_point", sb.toString())
+        map[if (BaseApp.instance.bridge.isDebug) "dev" else "prod"] = sb.toString()
         MobclickAgent.onEventObject(appContext, "event", map)
     }
 }
