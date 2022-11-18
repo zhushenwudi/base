@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -133,7 +134,8 @@ fun View.clickNoRepeat(
 ) {
     setOnClickListener {
         if (!isFastDoubleClick(it, interval, withOthers)) {
-            upReportTracePoint(label)
+            val isEmptyTextView = label.isEmpty() && it is TextView
+            upReportTracePoint(if (isEmptyTextView) (it as TextView).textStringTrim() else label)
             action(it)
         }
     }
@@ -143,10 +145,12 @@ fun View.upReportTracePoint(label: String, fragmentName: String? = null) {
     if (label.isNotEmpty() && BaseApp.instance.traceList.isNotEmpty()) {
         val map = HashMap<String, Any>()
         val sb = StringBuilder()
+        val currentPage = fragmentName ?: findNavController().currentDestination?.label?.toString()
+        if (currentPage.isNullOrEmpty()) {
+            return
+        }
         val info =
-            BaseApp.instance.traceList.find {
-                it.page == (fragmentName ?: findNavController().currentDestination?.label)
-            }
+            BaseApp.instance.traceList.find { it.page == currentPage }
         sb.append(info?.label ?: "-")
         sb.append(" - ")
         sb.append(label)
