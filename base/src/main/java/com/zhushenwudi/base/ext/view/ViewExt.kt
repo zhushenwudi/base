@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -135,8 +136,15 @@ fun View.clickNoRepeat(
     setOnClickListener {
         if (!isFastDoubleClick(it, interval, withOthers)) {
             try {
-                val isEmptyTextView = label.isEmpty() && it is TextView
-                upReportTracePoint(if (isEmptyTextView) (it as TextView).textStringTrim() else label)
+                var labelContext = label
+                if (label.isEmpty()) {
+                    labelContext = when (it) {
+                        is TextView -> it.textStringTrim()
+                        is ImageView -> it.contentDescription.toString()
+                        else -> label
+                    }
+                }
+                upReportTracePoint(label = labelContext)
             } catch (e: Exception) {
             } finally {
                 action(it)
