@@ -134,9 +134,13 @@ fun View.clickNoRepeat(
 ) {
     setOnClickListener {
         if (!isFastDoubleClick(it, interval, withOthers)) {
-            val isEmptyTextView = label.isEmpty() && it is TextView
-            upReportTracePoint(if (isEmptyTextView) (it as TextView).textStringTrim() else label)
-            action(it)
+            try {
+                val isEmptyTextView = label.isEmpty() && it is TextView
+                upReportTracePoint(if (isEmptyTextView) (it as TextView).textStringTrim() else label)
+            } catch (e: Exception) {
+            } finally {
+                action(it)
+            }
         }
     }
 }
@@ -145,12 +149,10 @@ fun View.upReportTracePoint(label: String, fragmentName: String? = null) {
     if (label.isNotEmpty() && BaseApp.instance.traceList.isNotEmpty()) {
         val map = HashMap<String, Any>()
         val sb = StringBuilder()
-        val currentPage = fragmentName ?: findNavController().currentDestination?.label?.toString()
-        if (currentPage.isNullOrEmpty()) {
-            return
-        }
         val info =
-            BaseApp.instance.traceList.find { it.page == currentPage }
+            BaseApp.instance.traceList.find {
+                it.page == (fragmentName ?: findNavController().currentDestination?.label)
+            }
         sb.append(info?.label ?: "-")
         sb.append(" - ")
         sb.append(label)
@@ -167,8 +169,12 @@ fun BaseQuickAdapter<*, *>.clickNoRepeat(
     action: (adapter: BaseQuickAdapter<*, *>?, view: View, position: Int) -> Unit
 ) {
     setOnItemClickListener { adapter, view, position ->
-        view.upReportTracePoint(label[position]?.second ?: "", fragmentName)
-        action(adapter, view, position)
+        try {
+            view.upReportTracePoint(label[position]?.second ?: "", fragmentName)
+        } catch (e: Exception) {
+        } finally {
+            action(adapter, view, position)
+        }
     }
 }
 
