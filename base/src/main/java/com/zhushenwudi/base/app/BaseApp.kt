@@ -33,8 +33,7 @@ import com.zhushenwudi.base.utils.restartApplication
 import dev.utils.LogPrintUtils
 import dev.utils.app.AppUtils
 import dev.utils.app.PathUtils
-import dev.utils.app.ResourceUtils
-import dev.utils.app.ResourceUtils.readStringFromAssets
+import dev.utils.common.CloseUtils
 import dev.utils.common.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -45,6 +44,7 @@ import xcrash.TombstoneManager
 import xcrash.TombstoneParser
 import xcrash.XCrash
 import java.io.File
+import java.io.InputStream
 
 /**
  * 作者　: hegaojian
@@ -267,11 +267,28 @@ open class BaseApp(val bridge: Bridge) : Application(), ViewModelStoreOwner {
 
     open fun initTracePointData() {
         val fileName = "page_trace_info.json"
-        val json = readStringFromAssets(fileName)
-        if (json.isNullOrEmpty()) {
+        val bytes = readFromAsset(fileName) ?: return
+        val json = String(bytes, Charsets.UTF_8)
+        if (json.isEmpty()) {
             return
         }
         fromJson<MutableList<TracePageInfo>>(json)?.let { traceList.addAll(it) }
+    }
+
+    private fun readFromAsset(fileName: String): ByteArray? {
+        var ins: InputStream? = null
+        try {
+            ins = resources.assets.open(fileName)
+            val length = ins.available()
+            val buffer = ByteArray(length)
+            ins.read(buffer)
+            return buffer
+        } catch (e: Exception) {
+            LogPrintUtils.e(e)
+        } finally {
+            ins?.let { CloseUtils.closeIOQuietly(it) }
+        }
+        return null
     }
 
     companion object {

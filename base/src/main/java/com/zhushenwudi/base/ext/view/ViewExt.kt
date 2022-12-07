@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.view.View
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -131,6 +130,7 @@ fun View.clickNoRepeat(
     interval: Long = 500,
     withOthers: Boolean = false,
     label: String = "",
+    fragmentName: String? = null,
     action: (view: View) -> Unit
 ) {
     setOnClickListener {
@@ -144,7 +144,7 @@ fun View.clickNoRepeat(
                         else -> label
                     }
                 }
-                upReportTracePoint(label = labelContext)
+                upReportTracePoint(label = labelContext, fragmentName = fragmentName)
             } catch (e: Exception) {
             } finally {
                 action(it)
