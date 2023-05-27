@@ -16,12 +16,12 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -51,25 +51,25 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    uploadArchives {
-        configuration = configurations.archives
-        repositories {
-            mavenDeployer {
-                def username = localProperties.getProperty("nexusName")
-                def password = localProperties.getProperty("nexusPwd")
-                repository(url: 'https://nexus3.devops.intelab.cloud/repository/android-maven/') {
-                    authentication(userName: username, password: password)
-                }
-                pom.project {
-                    version '1.0.7'
-                    artifactId 'base'
-                    groupId 'com.ilab.android'
-                    packaging 'aar'
-                    description 'init'
-                }
-            }
-        }
-    }
+//    uploadArchives {
+//        configuration = configurations.archives
+//        repositories {
+//            mavenDeployer {
+//                def username = localProperties.getProperty("nexusName")
+//                def password = localProperties.getProperty("nexusPwd")
+//                repository(url: 'https://nexus3.devops.intelab.cloud/repository/android-maven/') {
+//                    authentication(userName: username, password: password)
+//                }
+//                pom.project {
+//                    version '1.0.7'
+//                    artifactId 'base'
+//                    groupId 'com.ilab.android'
+//                    packaging 'aar'
+//                    description 'init'
+//                }
+//            }
+//        }
+//    }
 }
 
 noArg {
@@ -82,7 +82,7 @@ dependencies {
     api 'androidx.constraintlayout:constraintlayout:2.1.4'
     api "androidx.recyclerview:recyclerview:1.2.1"
     // kotlin
-    api 'androidx.core:core-ktx:1.8.0'
+    api 'androidx.core:core-ktx:1.9.0'
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     api "androidx.fragment:fragment-ktx:1.5.2"
@@ -96,8 +96,8 @@ dependencies {
     api "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
     api 'com.kunminx.arch:unpeek-livedata:7.2.0-beta1'
     // 路由
-    api 'androidx.navigation:navigation-fragment-ktx:2.5.1'
-    api 'androidx.navigation:navigation-ui-ktx:2.5.1'
+    api 'androidx.navigation:navigation-fragment-ktx:2.5.2'
+    api 'androidx.navigation:navigation-ui-ktx:2.5.2'
 
     /** third party **/
     // 网络请求
