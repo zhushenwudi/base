@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-noarg'
     id 'kotlin-kapt'
     id 'maven'
+    id 'maven-publish'
 }
 
 def localProperties = new Properties()
