@@ -22,8 +22,8 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -82,6 +82,12 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.zhushenwudi'
                 artifactId = 'base'
+                version = '1.0.8'
+            }
+            debug(MavenPublication) {
+                from components.debug
+                groupId = 'com.github.zhushenwudi'
+                artifactId = 'base-debug'
                 version = '1.0.8-alpha2'
             }
         }
