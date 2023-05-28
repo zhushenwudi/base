@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-noarg'
     id 'kotlin-kapt'
-    id 'maven'
+//    id 'maven'
     id 'maven-publish'
 }
 
@@ -17,6 +17,7 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
+    namespace 'com.zhushenwudi.base'
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
@@ -30,11 +31,12 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
-
     packagingOptions {
-        exclude 'META-INF/metadata.kotlin_module'
-        exclude 'META-INF/metadata.jvm.kotlin_module'
+        resources {
+            excludes += ['META-INF/metadata.kotlin_module', 'META-INF/metadata.jvm.kotlin_module']
+        }
     }
+
 
     buildTypes {
         release {
@@ -44,12 +46,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
 //    uploadArchives {
@@ -71,19 +73,19 @@ android {
 //            }
 //        }
 //    }
-    afterEvaluate {
-        publishing {
-            publications {
-                release(MavenPublication) {
-                    from components.release
-                    groupId = 'com.zhushenwudi'
-                    artifactId = 'base'
-                    version = '1.0.8-alpha1'
-                }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.zhushenwudi'
+                artifactId = 'base'
+                version = '1.0.8-alpha1'
             }
         }
     }
-
 }
 
 noArg {

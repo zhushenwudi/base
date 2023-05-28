@@ -17,7 +17,5 @@
         <item name="android:background">@drawable/snackbar_background</item>
         <item name="android:paddingLeft">@dimen/snackbar_padding_horizontal</item>
         <item name="android:paddingRight">@dimen/snackbar_padding_horizontal</item>
-        <item name="elevation">@dimen/snackbar_elevation</item>
-        <item name="maxActionInlineWidth">@dimen/snackbar_action_inline_max_width</item>
     </style>
 </resources>
